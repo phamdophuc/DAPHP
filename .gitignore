@@ -1,0 +1,71 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/auth.json
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+# Thư mục vendor (các thư viện cài đặt bởi Composer)
+vendor/
+
+# File environment (chứa thông tin nhạy cảm như database, API keys)
+.env
+.env.backup
+.env.*
+
+# Bộ nhớ cache và log của ứng dụng
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+!/storage/.gitignore
+
+# Thư mục public/uploads hoặc các file tải lên
+/public/storage
+/public/hot
+/public/uploads
+/public/*.key
+/public/*.log
+
+# File được tạo bởi IDE (PHPStorm, VSCode, v.v.)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# File của hệ điều hành
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.phar
+
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Các file biên dịch frontend (nếu sử dụng Mix hoặc Vite)
+public/css/*.map
+public/js/*.map
+public/mix-manifest.json
+
+# Thư mục build (nếu bạn sử dụng Docker hoặc các công cụ CI/CD)
+build/
