@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function createdProducts()
+    {
+        return $this->hasMany(Product::class, 'created_by');
+    }
+
+    public function updatedProducts()
+    {
+        return $this->hasMany(Product::class, 'updated_by');
+    }
 }
