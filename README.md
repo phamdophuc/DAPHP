@@ -1,3 +1,8 @@
+//Khi clone về nhớ kiếm tra xem có file .env hay chưa (.env không phải .env.example).
+//Nếu chưa có thì chạy copy .env.example .env trong cmd, sau khi chạy thì mở lên check xem có đúng tên database hay chưa.
+//Kiểm tra trong file .env phần APP_KEY có giá trị hay không, nếu không thì chạy php artisan key:generate.
+//Nếu không có folder node_modules thì chạy npm install và npm run dev.
+
 <<<<<<< HEAD
 # DAPHP
 =======
