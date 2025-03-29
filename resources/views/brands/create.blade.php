@@ -7,7 +7,7 @@
             @csrf
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" required>
+                <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
             </div>
             <button type="submit" class="btn btn-success">Create</button>
             <a href="{{ route('brands.index') }}" class="btn btn-secondary">Back</a>

@@ -8,7 +8,7 @@
             @method('PUT')
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" class="form-control" value="{{ $brand->name }}" required>
+                <input type="text" name="name" class="form-control" value="{{ old('name', $brand->name) }}" required>
             </div>
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('brands.index') }}" class="btn btn-secondary">Back</a>

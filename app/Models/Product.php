@@ -15,11 +15,22 @@ class Product extends Model
         'description',
         'image_url',
         'category_id',
-        'brand_id',
         'status',
+        'seo_title',
         'quantity',
+        'is_hot',
+        'hot_start_date',
+        'hot_end_date',
+        'brand_id',
+        'meta_keyword',
+        'created_by',
         'created_date',
+        'updated_by',
+        'updated_date'
     ];
+
+    const CREATED_AT = 'created_date';
+    const UPDATED_AT = 'updated_date';
 
     public function category()
     {

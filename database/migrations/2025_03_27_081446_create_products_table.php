@@ -11,23 +11,34 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id(); // Cột ID
-            $table->string('name'); // Tên sản phẩm
-            $table->decimal('price', 10, 2); // Giá sản phẩm
-            $table->decimal('promotion_price', 10, 2)->nullable(); // Giá khuyến mãi
-            $table->text('description')->nullable(); // Mô tả
-            $table->string('image_url')->nullable(); // URL hình ảnh
-            $table->unsignedBigInteger('category_id'); // ID danh mục
-            $table->unsignedBigInteger('brand_id'); // ID thương hiệu
-            $table->boolean('status')->default(1); // Trạng thái (1: Hoạt động, 0: Không hoạt động)
-            $table->integer('quantity'); // Số lượng
-            $table->timestamp('created_date')->useCurrent(); // Ngày tạo
-            $table->timestamps();
+        Schema::dropIfExists('products');
 
-            // Khóa ngoại (nếu cần thiết)
+        Schema::create('products', function (Blueprint $table) {
+            $table->id(); 
+            $table->string('name'); 
+            $table->decimal('price', 10, 2); 
+            $table->decimal('promotion_price', 10, 2)->nullable(); 
+            $table->text('description')->nullable(); 
+            $table->string('image_url')->nullable(); 
+            $table->unsignedBigInteger('category_id'); 
+            $table->boolean('status')->default(1); 
+            $table->string('seo_title')->nullable(); 
+            $table->integer('quantity'); 
+            $table->boolean('is_hot')->default(0); 
+            $table->timestamp('hot_start_date')->nullable(); 
+            $table->timestamp('hot_end_date')->nullable(); 
+            $table->unsignedBigInteger('brand_id')->nullable(); 
+            $table->string('meta_keyword')->nullable(); 
+            $table->unsignedBigInteger('created_by')->nullable(); 
+            $table->timestamp('created_date')->useCurrent(); 
+            $table->unsignedBigInteger('updated_by')->nullable(); 
+            $table->timestamp('updated_date')->nullable()->useCurrentOnUpdate(); 
+
+            // Khóa ngoại
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 
