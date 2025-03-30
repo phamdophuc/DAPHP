@@ -41,30 +41,44 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified brand.
      */
-    public function edit(Brand $brand)
+    public function edit($id)
     {
+        $brand = Brand::findOrFail($id);
+
+        if (!$brand) {
+            return redirect()->route('brands.index')->with('error', 'Brand not found');
+        }
+        
         return view('brands.edit', compact('brand'));
     }
 
     /**
      * Update the specified brand in storage.
      */
-    public function update(Request $request, Brand $brand)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $brand = Brand::findOrFail($id);
+
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $brand->update($request->all());
+        $brand->update($validated);
 
-        return redirect()->route('brands.index')->with('success', 'Brand updated successfully.');
+        return redirect()->route('brands.index')->with('success', 'Cập nhật thành công!');
     }
 
     /**
      * Remove the specified brand from storage.
      */
-    public function destroy(Brand $brand)
+    public function destroy($id)
     {
+        $brand = Brand::find($id);
+
+        if (!$brand) {
+            return redirect()->route('brands.index')->with('error', 'Brand not found');
+        }
+
         $brand->delete();
 
         return redirect()->route('brands.index')->with('success', 'Brand deleted successfully.');

@@ -37,14 +37,26 @@ class OrderController extends Controller
     }
 
     // Show the form for editing the specified order
-    public function edit(Order $order)
+    public function edit($id)
     {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return redirect()->route('orders.index')->with('error', 'Order not found');
+        }
+
         return view('orders.edit', compact('order'));
     }
 
     // Update the specified order in storage
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return redirect()->route('orders.index')->with('error', 'Order not found');
+        }
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'status' => 'required|in:pending,completed,canceled',
@@ -60,8 +72,14 @@ class OrderController extends Controller
     }
 
     // Remove the specified order from storage
-    public function destroy(Order $order)
+    public function destroy($id)
     {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return redirect()->route('orders.index')->with('error', 'Order not found');
+        }
+
         $order->delete();
 
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
