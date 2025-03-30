@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 // Routes for Products
-Route::prefix('products')->group(function () {
+Route::prefix('products')->middleware('auth')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
     Route::get('/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/', [ProductController::class, 'store'])->name('products.store');
@@ -29,7 +29,7 @@ Route::prefix('products')->group(function () {
 });
 
 // Routes for Categories
-Route::prefix('categories')->group(function () {
+Route::prefix('categories')->middleware('auth')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
@@ -42,7 +42,7 @@ Route::prefix('categories')->group(function () {
 });
 
 // Routes for Brands
-Route::prefix('brands')->group(function () {
+Route::prefix('brands')->middleware('auth')->group(function () {
     Route::get('/', [BrandController::class, 'index'])->name('brands.index');
     Route::get('/create', [BrandController::class, 'create'])->name('brands.create');
     Route::post('/', [BrandController::class, 'store'])->name('brands.store');
@@ -55,7 +55,7 @@ Route::prefix('brands')->group(function () {
 });
 
 // Routes for Orders
-Route::prefix('orders')->group(function () {
+Route::prefix('orders')->middleware('auth')->group(function () {
     Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/', [OrderController::class, 'store'])->name('orders.store');
@@ -68,7 +68,7 @@ Route::prefix('orders')->group(function () {
 });
 
 // Routes for OrderDetails
-Route::prefix('order-details')->group(function () {
+Route::prefix('order-details')->middleware('auth')->group(function () {
     Route::get('/', [OrderDetailController::class, 'index'])->name('order-details.index');
     Route::get('/create', [OrderDetailController::class, 'create'])->name('order-details.create');
     Route::post('/', [OrderDetailController::class, 'store'])->name('order-details.store');
@@ -85,7 +85,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

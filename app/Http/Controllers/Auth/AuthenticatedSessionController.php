@@ -24,14 +24,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+    public function store(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
+    if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('products.index');
     }
+
+    return back()->withErrors([
+        'email' => __('The provided credentials do not match our records.'),
+    ]);
+}
 
     /**
      * Destroy an authenticated session.
@@ -47,33 +55,4 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 
-    /**
-     * Display the registration view.
-     */
-    public function createRegister(): View
-    {
-        return view('auth.register');
-    }
-
-    /**
-     * Handle an incoming registration request.
-     */
-    public function storeRegister(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        Auth::login($user);
-
-        return redirect()->route('dashboard');
-    }
 }
