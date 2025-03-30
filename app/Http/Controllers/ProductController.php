@@ -2,123 +2,82 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
-{
-    // Hiển thị danh sách sản phẩm
+{ 
     public function index()
     {
-        $products = Product::with(['category', 'brand'])->orderBy('created_date', 'desc')->get();
+        $products = Product::all();
         return view('products.index', compact('products'));
     }
 
-    // Hiển thị form tạo sản phẩm mới
-    public function create()
-    {
-        $categories = Category::all();
-        $brands = Brand::all();
-        return view('products.create', compact('categories', 'brands'));
-    }
-
-    // Lưu sản phẩm mới
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'promotion_price' => 'nullable|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'nullable|exists:brands,id',
-            'quantity' => 'required|integer|min:0',
-            'status' => 'required|boolean',
-            'is_hot' => 'boolean',
-            'hot_start_date' => 'nullable|date_format:Y-m-d\TH:i', 
-            'hot_end_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:hot_start_date',
-            'seo_title' => 'nullable|string|max:255',
-            'meta_keyword' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
-        ]);
-
-        $data = $request->all();
-        if ($request->hasFile('image_url')) {
-            $imagePath = $request->file('image_url')->store('products', 'public');
-            $data['image_url'] = $imagePath;
-        }
-
-        $data['hot_start_date'] = $request->hot_start_date ? date('Y-m-d H:i:s', strtotime($request->hot_start_date)) : null;
-        $data['hot_end_date'] = $request->hot_end_date ? date('Y-m-d H:i:s', strtotime($request->hot_end_date)) : null;
-
-        $data['created_by'] = Auth::id();
-        Product::create($data);
-
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được tạo thành công.');
-    }
-
-    // Hiển thị chi tiết sản phẩm
     public function show($id)
     {
-        $product = Product::with(['category', 'brand'])->findOrFail($id);
+        $product = Product::findOrFail($id);
         return view('products.show', compact('product'));
     }
 
-    // Hiển thị form chỉnh sửa sản phẩm
-    public function edit($id)
+    private function authorizeAdmin()
     {
-        $product = Product::findOrFail($id);
-        $categories = Category::all();
-        $brands = Brand::all();
-        return view('products.edit', compact('product', 'categories', 'brands'));
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
+        }
     }
 
-    // Cập nhật sản phẩm
-    public function update(Request $request, $id)
+    public function create()
     {
-        $product = Product::findOrFail($id);
+        $this->authorizeAdmin();
+        return view('admin.products.create');
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorizeAdmin();
 
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'promotion_price' => 'nullable|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'nullable|exists:brands,id',
-            'quantity' => 'required|integer|min:0',
-            'status' => 'required|boolean',
-            'is_hot' => 'boolean',
-            'hot_start_date' => 'nullable|date_format:Y-m-d\TH:i',
-            'hot_end_date' => 'nullable|date_format:Y-m-d\TH:i|after_or_equal:hot_start_date',
-            'seo_title' => 'nullable|string|max:255',
-            'meta_keyword' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        $data = $request->all();
-        if ($request->hasFile('image_url')) {
-            $imagePath = $request->file('image_url')->store('products', 'public');
-            $data['image_url'] = $imagePath;
-        }
+        Product::create($request->all());
 
-        $data['hot_start_date'] = $request->hot_start_date ? date('Y-m-d H:i:s', strtotime($request->hot_start_date)) : null;
-        $data['hot_end_date'] = $request->hot_end_date ? date('Y-m-d H:i:s', strtotime($request->hot_end_date)) : null;
-
-        $data['updated_by'] = Auth::id();
-        $product->update($data);
-
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật.');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được tạo.');
     }
 
-    // Xóa sản phẩm
+    public function edit($id)
+    {
+        $this->authorizeAdmin();
+        $product = Product::findOrFail($id);
+        return view('admin.products.edit', compact('product'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->authorizeAdmin();
+
+        $product = Product::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+        ]);
+
+        $product->update($request->all());
+
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật.');
+    }
+
     public function destroy($id)
     {
+        $this->authorizeAdmin();
         $product = Product::findOrFail($id);
         $product->delete();
-
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã bị xóa.');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã bị xóa.');
     }
 }

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -31,7 +32,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-    ];
+    ];    
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+    
+    // Kiểm tra vai trò của người dùng
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role && $this->role->name === $roleName;
+    }
 
     /**
      * Get the attributes that should be cast.

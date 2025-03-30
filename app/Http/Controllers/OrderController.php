@@ -2,26 +2,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 
 class OrderController extends Controller
 {
-    // Display a listing of the orders
+    /**
+     * Hiển thị danh sách đơn hàng.
+     */
     public function index()
     {
-        $orders = Order::with('user')->get(); // Fetch orders with user data
-        return view('orders.index', compact('orders'));
+        if (Auth::user()->role === 'admin') {
+            $orders = Order::with('user')->get(); // Admin xem tất cả đơn hàng
+            return view('admin.orders.index', compact('orders'));
+        } 
+        
+        // User chỉ xem đơn hàng của mình
+        $orders = Order::where('user_id', Auth::id())->get();
+        return view('user.orders.index', compact('orders'));
     }
 
-    // Show the form for creating a new order
+    /**
+     * Hiển thị form tạo đơn hàng (chỉ admin).
+     */
     public function create()
     {
-        return view('orders.create');
+        $this->authorizeAction();
+        return view('admin.orders.create');
     }
 
-    // Store a newly created order in storage
+    /**
+     * Lưu đơn hàng vào database (chỉ admin).
+     */
     public function store(Request $request)
     {
+        $this->authorizeAction();
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'status' => 'required|in:pending,completed,canceled',
@@ -33,29 +49,44 @@ class OrderController extends Controller
 
         Order::create($request->all());
 
-        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
+        return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã được tạo.');
     }
 
-    // Show the form for editing the specified order
+    /**
+     * Hiển thị chi tiết đơn hàng.
+     */
+    public function show($id)
+    {
+        $order = Order::findOrFail($id);
+
+        if (Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
+            abort(403, 'Bạn không có quyền truy cập đơn hàng này.');
+        }
+
+        $view = Auth::user()->role === 'admin' ? 'admin.orders.show' : 'user.orders.show';
+
+        return view($view, compact('order'));
+    }
+
+    /**
+     * Hiển thị form chỉnh sửa đơn hàng (chỉ admin).
+     */
     public function edit($id)
     {
-        $order = Order::find($id);
+        $this->authorizeAction();
 
-        if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Order not found');
-        }
-
-        return view('orders.edit', compact('order'));
+        $order = Order::findOrFail($id);
+        return view('admin.orders.edit', compact('order'));
     }
 
-    // Update the specified order in storage
+    /**
+     * Cập nhật đơn hàng (chỉ admin).
+     */
     public function update(Request $request, $id)
     {
-        $order = Order::find($id);
+        $this->authorizeAction();
 
-        if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Order not found');
-        }
+        $order = Order::findOrFail($id);
 
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -68,20 +99,29 @@ class OrderController extends Controller
 
         $order->update($request->all());
 
-        return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
+        return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công.');
     }
 
-    // Remove the specified order from storage
+    /**
+     * Xoá đơn hàng (chỉ admin).
+     */
     public function destroy($id)
     {
-        $order = Order::find($id);
+        $this->authorizeAction();
 
-        if (!$order) {
-            return redirect()->route('orders.index')->with('error', 'Order not found');
-        }
-
+        $order = Order::findOrFail($id);
         $order->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
+        return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã bị xoá.');
+    }
+
+    /**
+     * Kiểm tra quyền truy cập (chỉ cho phép admin).
+     */
+    private function authorizeAction()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
+        }
     }
 }

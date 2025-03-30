@@ -7,95 +7,66 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Routes for Products
-Route::prefix('products')->middleware('auth')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/', [ProductController::class, 'store'])->name('products.store');
-
-    Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/{id}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
-
-    Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
-});
-
-// Routes for Categories
-Route::prefix('categories')->middleware('auth')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
-
-    Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/{id}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-
-    Route::get('/{id}', [CategoryController::class, 'show'])->name('categories.show');
-});
-
-// Routes for Brands
-Route::prefix('brands')->middleware('auth')->group(function () {
-    Route::get('/', [BrandController::class, 'index'])->name('brands.index');
-    Route::get('/create', [BrandController::class, 'create'])->name('brands.create');
-    Route::post('/', [BrandController::class, 'store'])->name('brands.store');
-
-    Route::get('/edit/{id}', [BrandController::class, 'edit'])->name('brands.edit');
-    Route::put('/{id}', [BrandController::class, 'update'])->name('brands.update');
-    Route::delete('/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
-
-    Route::get('/{id}', [BrandController::class, 'show'])->name('brands.show');
-});
-
-// Routes for Orders
-Route::prefix('orders')->middleware('auth')->group(function () {
-    Route::get('/', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
-    Route::post('/', [OrderController::class, 'store'])->name('orders.store');
-
-    Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
-    Route::put('/{id}', [OrderController::class, 'update'])->name('orders.update');
-    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
-
-    Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
-});
-
-// Routes for OrderDetails
-Route::prefix('order-details')->middleware('auth')->group(function () {
-    Route::get('/', [OrderDetailController::class, 'index'])->name('order-details.index');
-    Route::get('/create', [OrderDetailController::class, 'create'])->name('order-details.create');
-    Route::post('/', [OrderDetailController::class, 'store'])->name('order-details.store');
-
-    Route::get('/edit/{id}', [OrderDetailController::class, 'edit'])->name('order-details.edit');
-    Route::put('/{id}', [OrderDetailController::class, 'update'])->name('order-details.update');
-    Route::delete('/{id}', [OrderDetailController::class, 'destroy'])->name('order-details.destroy');
-
-    Route::get('/{id}', [OrderDetailController::class, 'show'])->name('order-details.show');
-});
-
-
+Route::get('/', [ProductController::class, 'index'])->name('products.index');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
+    Route::get('/products/edit/{id}', [ProductController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+    Route::resource('/categories', CategoryController::class)->names('admin.categories');
+    Route::resource('/brands', BrandController::class)->names('admin.brands');
+    Route::resource('/orders', OrderController::class)->names('admin.orders');
+    Route::resource('/order-details', OrderDetailController::class)->names('admin.order-details');
+});
+
+Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('user.dashboard');
+    })->name('user.dashboard');
+    Route::get('/products', [ProductController::class, 'index'])->name('user.products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('user.products.show');
+    Route::post('/products/{id}/add-to-cart', [ProductController::class, 'addToCart'])->name('user.products.addToCart');
+    Route::get('/cart', [ProductController::class, 'cart'])->name('user.cart');
+    Route::post('/cart/update', [ProductController::class, 'updateCart'])->name('user.cart.update');
+    Route::post('/cart/remove', [ProductController::class, 'removeFromCart'])->name('user.cart.remove');
+    Route::post('/cart/checkout', [ProductController::class, 'checkout'])->name('user.cart.checkout');
+    Route::get('/orders', [OrderController::class, 'index'])->name('user.orders.index');
+    Route::post('/orders', [OrderController::class, 'store'])->name('user.orders.store');
+    Route::get('/orders/{id}/details', [OrderDetailController::class, 'show'])->name('user.orders.details');
+    Route::get('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');
+    Route::get('/orders/{id}/confirm', [OrderController::class, 'confirm'])->name('user.orders.confirm');
+    Route::get('/orders/{id}/complete', [OrderController::class, 'complete'])->name('user.orders.complete');
+    Route::get('/orders/{id}/return', [OrderController::class, 'return'])->name('user.orders.return');
+    Route::get('/orders/{id}/review', [OrderController::class, 'review'])->name('user.orders.review');
+});
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    Route::get('/register', [AuthenticatedSessionController::class, 'createRegister'])->name('register');
-    Route::post('/register', [AuthenticatedSessionController::class, 'storeRegister']);
 });
 
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+// Load các route authentication khác
 require __DIR__.'/auth.php';

@@ -4,87 +4,110 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the categories.
+     * Hiển thị danh sách danh mục.
      */
     public function index()
     {
         $categories = Category::all();
-        return view('categories.index', compact('categories'));
+
+        // Kiểm tra role để hiển thị đúng view
+        $view = Auth::user()->role === 'admin' ? 'admin.categories.index' : 'user.categories.index';
+
+        return view($view, compact('categories'));
     }
 
     /**
-     * Show the form for creating a new category.
+     * Hiển thị form tạo danh mục (chỉ admin).
      */
     public function create()
     {
-        return view('categories.create');
+        $this->authorizeAction();
+        return view('admin.categories.create');
     }
 
     /**
-     * Store a newly created category in storage.
+     * Lưu danh mục mới vào cơ sở dữ liệu (chỉ admin).
      */
     public function store(Request $request)
     {
+        $this->authorizeAction();
+
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
         Category::create($request->all());
 
-        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được tạo.');
     }
 
     /**
-     * Show the form for editing the specified category.
+     * Hiển thị form chỉnh sửa danh mục (chỉ admin).
      */
     public function edit($id)
     {
-        $category = Category::find($id);
+        $this->authorizeAction();
 
-        if (!$category) {
-            return redirect()->route('categories.index')->with('error', 'Category not found');
-        }
+        $category = Category::findOrFail($id);
 
-        return view('categories.edit', compact('category'));
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
-     * Update the specified category in storage.
+     * Cập nhật danh mục trong cơ sở dữ liệu (chỉ admin).
      */
     public function update(Request $request, $id)
     {
-        $category = Category::find($id);
+        $this->authorizeAction();
 
-        if (!$category) {
-            return redirect()->route('categories.index')->with('error', 'Category not found');
-        }
+        $category = Category::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $category->update($request->all());
+        $category->update($validated);
 
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được cập nhật.');
     }
 
     /**
-     * Remove the specified category from storage.
+     * Xoá danh mục (chỉ admin).
      */
     public function destroy($id)
     {
-        $category = Category::find($id);
+        $this->authorizeAction();
 
-        if (!$category) {
-            return redirect()->route('categories.index')->with('error', 'Category not found');
-        }
-
+        $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được xoá.');
+    }
+
+    /**
+     * Hiển thị chi tiết danh mục (dành cho cả user và admin).
+     */
+    public function show($id)
+    {
+        $category = Category::findOrFail($id);
+
+        $view = Auth::user()->role === 'admin' ? 'admin.categories.show' : 'user.categories.show';
+
+        return view($view, compact('category'));
+    }
+
+    /**
+     * Kiểm tra quyền truy cập (chỉ cho phép admin).
+     */
+    private function authorizeAction()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
+        }
     }
 }
