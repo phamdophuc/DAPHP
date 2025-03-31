@@ -2,33 +2,35 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Tạo tài khoản admin
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $userRole = Role::firstOrCreate(['name' => 'user']);
+
         User::updateOrCreate(
-            ['email' => 'admin@gmail.com'], // Kiểm tra nếu email đã tồn tại
+            ['email' => 'admin@gmail.com'],
             [
                 'name' => 'Admin',
-                'password' => Hash::make('Admin123'), // Mật khẩu bảo mật
-                'role_id' => 1, // Giả sử role_id = 1 là admin
-                'role_name' => 'admin',
+                'password' => Hash::make('Admin123'),
+                'role_id' => $adminRole->id,
             ]
         );
 
-        // Tạo user bình thường
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'role_id' => 2, // Giả sử role_id = 2 là user
-        ]);
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => Hash::make('password'),
+                'role_id' => $userRole->id,
+            ]
+        );
     }
 }
+    

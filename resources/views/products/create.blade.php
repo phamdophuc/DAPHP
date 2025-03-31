@@ -3,9 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Add Product</h1>
-
-        @if (Auth::check() && Auth::user()->role === 'admin')
-            {{-- Hiển thị lỗi nếu có --}}
+        @if(Gate::allows('manage'))
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -16,7 +14,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">

@@ -5,27 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class BrandController extends Controller
 {
-
     public function index()
     {
         $brands = Brand::all();
-        $view = Auth::user()->role === 'admin' ? 'admin.brands.index' : 'user.brands.index';
-
-        return view($view, compact('brands'));
+        return view('brands.index', compact('brands'));
     }
 
     public function create()
     {
-        $this->authorizeAction();
-        return view('admin.brands.create');
+        Gate::authorize('is-admin'); // Chặn nếu không phải admin
+        return view('brands.create');
     }
 
     public function store(Request $request)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -33,21 +31,21 @@ class BrandController extends Controller
 
         Brand::create($request->all());
 
-        return redirect()->route('admin.brands.index')->with('success', 'Thương hiệu đã được tạo.');
+        return redirect()->route('brands.index')->with('success', 'Thương hiệu đã được tạo.');
     }
 
     public function edit($id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $brand = Brand::findOrFail($id);
 
-        return view('admin.brands.edit', compact('brand'));
+        return view('brands.edit', compact('brand'));
     }
 
     public function update(Request $request, $id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $brand = Brand::findOrFail($id);
 
@@ -57,32 +55,22 @@ class BrandController extends Controller
 
         $brand->update($validated);
 
-        return redirect()->route('admin.brands.index')->with('success', 'Thương hiệu đã được cập nhật.');
+        return redirect()->route('brands.index')->with('success', 'Thương hiệu đã được cập nhật.');
     }
 
     public function destroy($id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $brand = Brand::findOrFail($id);
         $brand->delete();
 
-        return redirect()->route('admin.brands.index')->with('success', 'Thương hiệu đã được xoá.');
+        return redirect()->route('brands.index')->with('success', 'Thương hiệu đã được xoá.');
     }
 
     public function show($id)
     {
         $brand = Brand::findOrFail($id);
-
-        $view = Auth::user()->role === 'admin' ? 'admin.brands.show' : 'user.brands.show';
-
-        return view($view, compact('brand'));
-    }
-
-    private function authorizeAction()
-    {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
-        }
+        return view('brands.show', compact('brand'));
     }
 }

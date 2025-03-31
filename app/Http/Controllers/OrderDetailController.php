@@ -3,30 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\OrderDetail;
 use App\Models\Order;
 use App\Models\Product;
 
 class OrderDetailController extends Controller
 {
-    // Danh sách chi tiết đơn hàng
+
     public function index()
     {
-        $orderDetails = OrderDetail::with(['order', 'product'])->get();
+        if (Gate::allows('is-admin')) {
+            $orderDetails = OrderDetail::with(['order', 'product'])->get(); 
+        } else {
+            $orderDetails = OrderDetail::whereHas('order', function ($query) {
+                $query->where('user_id', Auth::id());
+            })->with(['order', 'product'])->get();
+        }
+
         return view('order_details.index', compact('orderDetails'));
     }
 
-    // Form tạo chi tiết đơn hàng
     public function create()
     {
+        Gate::authorize('is-admin');
+
         $orders = Order::all();
         $products = Product::all();
         return view('order_details.create', compact('orders', 'products'));
     }
 
-    // Lưu chi tiết đơn hàng
     public function store(Request $request)
     {
+        Gate::authorize('is-admin');
+
         $request->validate([
             'order_id' => 'required|exists:orders,id',
             'product_id' => 'required|exists:products,id',
@@ -39,29 +50,22 @@ class OrderDetailController extends Controller
         return redirect()->route('order_details.index')->with('success', 'Chi tiết đơn hàng đã được tạo.');
     }
 
-    // Chỉnh sửa chi tiết đơn hàng
     public function edit($id)
     {
-        $orderDetail = OrderDetail::find($id);
+        Gate::authorize('is-admin');
 
-        if (!$orderDetail) {
-            return redirect()->route('order_details.index')->with('error', 'Không tìm thấy chi tiết đơn hàng.');
-        }
-
+        $orderDetail = OrderDetail::findOrFail($id);
         $orders = Order::all();
         $products = Product::all();
 
         return view('order_details.edit', compact('orderDetail', 'orders', 'products'));
     }
 
-    // Cập nhật chi tiết đơn hàng
     public function update(Request $request, $id)
     {
-        $orderDetail = OrderDetail::find($id);
+        Gate::authorize('is-admin');
 
-        if (!$orderDetail) {
-            return redirect()->route('order_details.index')->with('error', 'Không tìm thấy chi tiết đơn hàng.');
-        }
+        $orderDetail = OrderDetail::findOrFail($id);
 
         $request->validate([
             'order_id' => 'required|exists:orders,id',
@@ -75,15 +79,11 @@ class OrderDetailController extends Controller
         return redirect()->route('order_details.index')->with('success', 'Chi tiết đơn hàng đã được cập nhật.');
     }
 
-    // Xóa chi tiết đơn hàng
     public function destroy($id)
     {
-        $orderDetail = OrderDetail::find($id);
+        Gate::authorize('is-admin');
 
-        if (!$orderDetail) {
-            return redirect()->route('order_details.index')->with('error', 'Không tìm thấy chi tiết đơn hàng.');
-        }
-
+        $orderDetail = OrderDetail::findOrFail($id);
         $orderDetail->delete();
 
         return redirect()->route('order_details.index')->with('success', 'Chi tiết đơn hàng đã được xóa.');

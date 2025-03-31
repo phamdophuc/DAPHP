@@ -11,7 +11,7 @@
             </div>
         @endif
 
-        @if (Auth::check() && Auth::user()->role === 'admin')
+        @if(Gate::allows('manage'))
             <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Create New Category</a>
         @endif
 
@@ -31,7 +31,7 @@
                         <td>
                             <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
-                            @if (Auth::check() && Auth::user()->role === 'admin')
+                            @can('manage')
                                 <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
@@ -40,7 +40,7 @@
                                         Delete
                                     </button>
                                 </form>
-                            @endif
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

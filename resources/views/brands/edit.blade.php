@@ -2,13 +2,12 @@
 
 @section('content')
     <div class="container mt-5">
-        @if (Auth::check() && Auth::user()->role === 'admin')
+        @if(Gate::allows('manage')) 
             <div class="card">
                 <div class="card-header">
                     <h3>Edit Brand</h3>
                 </div>
                 <div class="card-body">
-                    {{-- Hiển thị lỗi nếu có --}}
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -18,7 +17,6 @@
                             </ul>
                         </div>
                     @endif
-
                     <form action="{{ route('brands.update', $brand->id) }}" method="POST">
                         @csrf
                         @method('PUT')

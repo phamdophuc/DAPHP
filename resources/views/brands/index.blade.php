@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3>Brands</h3>
-                @if (Auth::check() && Auth::user()->role === 'admin')
+                @if(Gate::allows('manage'))
                     <a href="{{ route('brands.create') }}" class="btn btn-primary">Create New Brand</a>
                 @endif
             </div>
@@ -18,7 +18,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                @if (Auth::check() && Auth::user()->role === 'admin')
+                                @if(Gate::allows('manage'))
                                     <th>Actions</th>
                                 @endif
                             </tr>
@@ -28,7 +28,7 @@
                                 <tr>
                                     <td>{{ $brand->id }}</td>
                                     <td>{{ $brand->name }}</td>
-                                    @if (Auth::check() && Auth::user()->role === 'admin')
+                                    @can('manage-brands')
                                         <td>
                                             <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                             <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" class="d-inline">
@@ -37,7 +37,7 @@
                                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                             </form>
                                         </td>
-                                    @endif
+                                    @endcan
                                 </tr>
                             @endforeach
                         </tbody>

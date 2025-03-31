@@ -5,37 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
-    /**
-     * Hiển thị danh sách danh mục.
-     */
     public function index()
     {
         $categories = Category::all();
-
-        // Kiểm tra role để hiển thị đúng view
-        $view = Auth::user()->role === 'admin' ? 'admin.categories.index' : 'user.categories.index';
-
-        return view($view, compact('categories'));
+        return view('categories.index', compact('categories'));
     }
 
-    /**
-     * Hiển thị form tạo danh mục (chỉ admin).
-     */
     public function create()
     {
-        $this->authorizeAction();
-        return view('admin.categories.create');
+        dd(Gate::allows('is-admin')); // Kiểm tra xem Laravel có nhận diện quyền không
+        Gate::authorize('is-admin');
+        return view('products.create');;
     }
 
-    /**
-     * Lưu danh mục mới vào cơ sở dữ liệu (chỉ admin).
-     */
     public function store(Request $request)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -43,27 +32,21 @@ class CategoryController extends Controller
 
         Category::create($request->all());
 
-        return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được tạo.');
+        return redirect()->route('categories.index')->with('success', 'Danh mục đã được tạo.');
     }
 
-    /**
-     * Hiển thị form chỉnh sửa danh mục (chỉ admin).
-     */
     public function edit($id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $category = Category::findOrFail($id);
 
-        return view('admin.categories.edit', compact('category'));
+        return view('categories.edit', compact('category'));
     }
 
-    /**
-     * Cập nhật danh mục trong cơ sở dữ liệu (chỉ admin).
-     */
     public function update(Request $request, $id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $category = Category::findOrFail($id);
 
@@ -73,41 +56,23 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được cập nhật.');
+        return redirect()->route('categories.index')->with('success', 'Danh mục đã được cập nhật.');
     }
 
-    /**
-     * Xoá danh mục (chỉ admin).
-     */
+
     public function destroy($id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được xoá.');
+        return redirect()->route('categories.index')->with('success', 'Danh mục đã được xoá.');
     }
 
-    /**
-     * Hiển thị chi tiết danh mục (dành cho cả user và admin).
-     */
     public function show($id)
     {
         $category = Category::findOrFail($id);
-
-        $view = Auth::user()->role === 'admin' ? 'admin.categories.show' : 'user.categories.show';
-
-        return view($view, compact('category'));
-    }
-
-    /**
-     * Kiểm tra quyền truy cập (chỉ cho phép admin).
-     */
-    private function authorizeAction()
-    {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
-        }
+        return view('categories.show', compact('category'));
     }
 }

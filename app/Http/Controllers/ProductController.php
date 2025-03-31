@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProductController extends Controller
 { 
+
+    
     public function index()
     {
         $products = Product::all();
@@ -21,22 +25,16 @@ class ProductController extends Controller
         return view('products.show', compact('product'));
     }
 
-    private function authorizeAdmin()
-    {
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
-        }
-    }
-
     public function create()
     {
-        $this->authorizeAdmin();
-        return view('admin.products.create');
+        Gate::authorize('is-admin'); // Chặn nếu không phải admin
+        return view('products.create');
     }
+
 
     public function store(Request $request)
     {
-        $this->authorizeAdmin();
+        Gate::authorize('is-admin');
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -46,19 +44,20 @@ class ProductController extends Controller
 
         Product::create($request->all());
 
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được tạo.');
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được tạo.');
     }
 
     public function edit($id)
     {
-        $this->authorizeAdmin();
+        Gate::authorize('is-admin');
+
         $product = Product::findOrFail($id);
-        return view('admin.products.edit', compact('product'));
+        return view('products.edit', compact('product'));
     }
 
     public function update(Request $request, $id)
     {
-        $this->authorizeAdmin();
+        Gate::authorize('is-admin');
 
         $product = Product::findOrFail($id);
         
@@ -70,14 +69,19 @@ class ProductController extends Controller
 
         $product->update($request->all());
 
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật.');
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật.');
     }
 
+    /**
+     * Xoá sản phẩm (chỉ admin)
+     */
     public function destroy($id)
     {
-        $this->authorizeAdmin();
+        Gate::authorize('is-admin');
+
         $product = Product::findOrFail($id);
         $product->delete();
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã bị xóa.');
+
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã bị xóa.');
     }
 }

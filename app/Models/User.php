@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
     /**
@@ -41,7 +41,7 @@ class User extends Authenticatable
     // Kiểm tra vai trò của người dùng
     public function hasRole(string $roleName): bool
     {
-        return $this->role && $this->role->name === $roleName;
+        return optional($this->role)->name === $roleName;
     }
 
     /**
@@ -71,4 +71,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Product::class, 'updated_by');
     }
+
 }

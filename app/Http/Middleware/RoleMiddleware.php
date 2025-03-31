@@ -1,27 +1,23 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, $role)
     {
-        $user = Auth::user();
+        // Kiểm tra người dùng đã đăng nhập chưa
+        $user = $request->user();
 
-        // Kiểm tra nếu người dùng chưa đăng nhập hoặc không có role
-        if (!$user || !$user->role) {
-            abort(403, 'Unauthorized');
+        // Kiểm tra nếu chưa đăng nhập hoặc role_id không phải là 1 (admin)
+        if (!$user || $user->role_id !== 1) {
+            abort(403, 'Bạn không có quyền truy cập.');
         }
 
-        // Kiểm tra vai trò của người dùng
-        if ($user->role->name === $role) {
-            return $next($request);
-        }
-
-        abort(403, 'Unauthorized');
+        return $next($request);
     }
 }

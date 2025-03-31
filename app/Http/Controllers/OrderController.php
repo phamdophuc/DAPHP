@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Order;
 
 class OrderController extends Controller
@@ -12,14 +14,13 @@ class OrderController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->role === 'admin') {
+        if (Gate::allows('is-admin')) {
             $orders = Order::with('user')->get(); // Admin xem tất cả đơn hàng
-            return view('admin.orders.index', compact('orders'));
-        } 
-        
-        // User chỉ xem đơn hàng của mình
-        $orders = Order::where('user_id', Auth::id())->get();
-        return view('user.orders.index', compact('orders'));
+        } else {
+            $orders = Order::where('user_id', Auth::id())->get(); // User chỉ xem đơn hàng của mình
+        }
+
+        return view('orders.index', compact('orders'));
     }
 
     /**
@@ -27,8 +28,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $this->authorizeAction();
-        return view('admin.orders.create');
+        Gate::authorize('is-admin');
+        return view('orders.create');
     }
 
     /**
@@ -36,7 +37,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -49,7 +50,7 @@ class OrderController extends Controller
 
         Order::create($request->all());
 
-        return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã được tạo.');
+        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã được tạo.');
     }
 
     /**
@@ -59,13 +60,11 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        if (Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
+        if (Gate::denies('is-admin') && $order->user_id !== Auth::id()) {
             abort(403, 'Bạn không có quyền truy cập đơn hàng này.');
         }
 
-        $view = Auth::user()->role === 'admin' ? 'admin.orders.show' : 'user.orders.show';
-
-        return view($view, compact('order'));
+        return view('orders.show', compact('order'));
     }
 
     /**
@@ -73,10 +72,10 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $order = Order::findOrFail($id);
-        return view('admin.orders.edit', compact('order'));
+        return view('orders.edit', compact('order'));
     }
 
     /**
@@ -84,7 +83,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $order = Order::findOrFail($id);
 
@@ -99,7 +98,7 @@ class OrderController extends Controller
 
         $order->update($request->all());
 
-        return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công.');
+        return redirect()->route('orders.index')->with('success', 'Cập nhật đơn hàng thành công.');
     }
 
     /**
@@ -107,21 +106,11 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorizeAction();
+        Gate::authorize('is-admin');
 
         $order = Order::findOrFail($id);
         $order->delete();
 
-        return redirect()->route('admin.orders.index')->with('success', 'Đơn hàng đã bị xoá.');
-    }
-
-    /**
-     * Kiểm tra quyền truy cập (chỉ cho phép admin).
-     */
-    private function authorizeAction()
-    {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
-        }
+        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã bị xoá.');
     }
 }
