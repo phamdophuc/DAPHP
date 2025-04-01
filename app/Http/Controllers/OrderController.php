@@ -14,12 +14,6 @@ class OrderController extends Controller
      */
     public function index()
     {
-        if (Gate::allows('is-admin')) {
-            $orders = Order::with('user')->get(); // Admin xem tất cả đơn hàng
-        } else {
-            $orders = Order::where('user_id', Auth::id())->get(); // User chỉ xem đơn hàng của mình
-        }
-
         return view('orders.index', compact('orders'));
     }
 
@@ -28,7 +22,6 @@ class OrderController extends Controller
      */
     public function create()
     {
-        Gate::authorize('is-admin');
         return view('orders.create');
     }
 
@@ -37,8 +30,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        Gate::authorize('is-admin');
-
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'status' => 'required|in:pending,completed,canceled',
@@ -59,11 +50,6 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::findOrFail($id);
-
-        if (Gate::denies('is-admin') && $order->user_id !== Auth::id()) {
-            abort(403, 'Bạn không có quyền truy cập đơn hàng này.');
-        }
-
         return view('orders.show', compact('order'));
     }
 
@@ -72,7 +58,6 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        Gate::authorize('is-admin');
 
         $order = Order::findOrFail($id);
         return view('orders.edit', compact('order'));
@@ -83,7 +68,6 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Gate::authorize('is-admin');
 
         $order = Order::findOrFail($id);
 
@@ -106,11 +90,34 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        Gate::authorize('is-admin');
 
         $order = Order::findOrFail($id);
         $order->delete();
 
         return redirect()->route('orders.index')->with('success', 'Đơn hàng đã bị xoá.');
     }
+    public function cancel($id) {
+        $order = Order::findOrFail($id);
+        $order->update(['status' => 'canceled']);
+        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã bị hủy.');
+    }
+    
+    public function confirm($id) {
+        $order = Order::findOrFail($id);
+        $order->update(['status' => 'confirmed']);
+        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã được xác nhận.');
+    }
+    
+    public function complete($id) {
+        $order = Order::findOrFail($id);
+        $order->update(['status' => 'completed']);
+        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã hoàn thành.');
+    }
+    
+    public function return($id) {
+        $order = Order::findOrFail($id);
+        $order->update(['status' => 'returned']);
+        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã được trả lại.');
+    }
+    
 }

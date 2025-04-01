@@ -17,14 +17,12 @@ class CategoryController extends Controller
 
     public function create()
     {
-        dd(Gate::allows('is-admin')); // Kiểm tra xem Laravel có nhận diện quyền không
-        Gate::authorize('is-admin');
+
         return view('products.create');;
     }
 
     public function store(Request $request)
     {
-        Gate::authorize('is-admin');
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -37,7 +35,6 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        Gate::authorize('is-admin');
 
         $category = Category::findOrFail($id);
 
@@ -46,7 +43,6 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        Gate::authorize('is-admin');
 
         $category = Category::findOrFail($id);
 
@@ -62,7 +58,6 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
-        Gate::authorize('is-admin');
 
         $category = Category::findOrFail($id);
         $category->delete();

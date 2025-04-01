@@ -14,21 +14,11 @@ class OrderDetailController extends Controller
 
     public function index()
     {
-        if (Gate::allows('is-admin')) {
-            $orderDetails = OrderDetail::with(['order', 'product'])->get(); 
-        } else {
-            $orderDetails = OrderDetail::whereHas('order', function ($query) {
-                $query->where('user_id', Auth::id());
-            })->with(['order', 'product'])->get();
-        }
-
         return view('order_details.index', compact('orderDetails'));
     }
 
     public function create()
     {
-        Gate::authorize('is-admin');
-
         $orders = Order::all();
         $products = Product::all();
         return view('order_details.create', compact('orders', 'products'));
@@ -36,8 +26,6 @@ class OrderDetailController extends Controller
 
     public function store(Request $request)
     {
-        Gate::authorize('is-admin');
-
         $request->validate([
             'order_id' => 'required|exists:orders,id',
             'product_id' => 'required|exists:products,id',
@@ -52,8 +40,6 @@ class OrderDetailController extends Controller
 
     public function edit($id)
     {
-        Gate::authorize('is-admin');
-
         $orderDetail = OrderDetail::findOrFail($id);
         $orders = Order::all();
         $products = Product::all();
@@ -63,7 +49,6 @@ class OrderDetailController extends Controller
 
     public function update(Request $request, $id)
     {
-        Gate::authorize('is-admin');
 
         $orderDetail = OrderDetail::findOrFail($id);
 
@@ -81,8 +66,6 @@ class OrderDetailController extends Controller
 
     public function destroy($id)
     {
-        Gate::authorize('is-admin');
-
         $orderDetail = OrderDetail::findOrFail($id);
         $orderDetail->delete();
 

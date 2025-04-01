@@ -17,13 +17,11 @@ class BrandController extends Controller
 
     public function create()
     {
-        Gate::authorize('is-admin'); // Chặn nếu không phải admin
         return view('brands.create');
     }
 
     public function store(Request $request)
     {
-        Gate::authorize('is-admin');
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -36,7 +34,6 @@ class BrandController extends Controller
 
     public function edit($id)
     {
-        Gate::authorize('is-admin');
 
         $brand = Brand::findOrFail($id);
 
@@ -45,8 +42,6 @@ class BrandController extends Controller
 
     public function update(Request $request, $id)
     {
-        Gate::authorize('is-admin');
-
         $brand = Brand::findOrFail($id);
 
         $validated = $request->validate([
@@ -60,8 +55,6 @@ class BrandController extends Controller
 
     public function destroy($id)
     {
-        Gate::authorize('is-admin');
-
         $brand = Brand::findOrFail($id);
         $brand->delete();
 

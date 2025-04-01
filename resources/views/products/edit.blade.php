@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Edit Product</h1>
 
-        @if(Gate::allows('manage'))
+        @if(auth()->user() && auth()->user()->role === 'admin')
             {{-- Hiển thị lỗi --}}
             @if ($errors->any())
                 <div class="alert alert-danger">

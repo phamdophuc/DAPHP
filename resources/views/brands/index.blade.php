@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3>Brands</h3>
-                @if(Gate::allows('manage'))
+                @if(auth()->user() && auth()->user()->role === 'admin')
                     <a href="{{ route('brands.create') }}" class="btn btn-primary">Create New Brand</a>
                 @endif
             </div>
@@ -18,7 +18,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                @if(Gate::allows('manage'))
+                                @if(auth()->user() && auth()->user()->role === 'admin')
                                     <th>Actions</th>
                                 @endif
                             </tr>

@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Product List</h1>
 
-        @if(Gate::allows('manage'))
+        @if(auth()->user() && auth()->user()->role === 'admin')
         <a href="{{ route('products.create') }}" class="btn btn-primary">Add Product</a>
         @endif
         <table class="table mt-3">
@@ -25,7 +25,7 @@
                         <td>
                             <a href="{{ route('products.show', $product->id) }}" class="btn btn-info">View</a>
                             
-                            @if(Gate::allows('manage'))
+                            @if(auth()->user() && auth()->user()->role === 'admin')
                                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
                                 <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
                                     @csrf

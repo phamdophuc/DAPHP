@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Add Product</h1>
-        @if(Gate::allows('manage'))
+        @if(auth()->user() && auth()->user()->role === 'admin')
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>

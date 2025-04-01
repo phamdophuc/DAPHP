@@ -10,11 +10,14 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, $role)
     {
-        // Kiểm tra người dùng đã đăng nhập chưa
-        $user = $request->user();
+        if (!Auth::check()) {
+            abort(403, 'Bạn chưa đăng nhập.');
+        }
+        if (Auth::user()->role !== $role) {
+            abort(403, 'Vai trò không hợp lệ: ' . Auth::user()->role);
+        }
 
-        // Kiểm tra nếu chưa đăng nhập hoặc role_id không phải là 1 (admin)
-        if (!$user || $user->role_id !== 1) {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Bạn không có quyền truy cập.');
         }
 

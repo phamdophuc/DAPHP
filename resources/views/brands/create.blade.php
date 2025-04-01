@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-5">
-        @if(Gate::allows('manage'))
+        @if(auth()->user() && auth()->user()->role === 'admin')
             <div class="card">
                 <div class="card-header">
                     <h3>Create Brand</h3>
