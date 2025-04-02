@@ -12,6 +12,7 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -21,8 +22,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
+    public function role()
+    {
+        return $this->belongsTo(Role::class,'role_id');
+    }
 
+    public function isAdmin()
+    {
+        return $this->role->name === 'admin';
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

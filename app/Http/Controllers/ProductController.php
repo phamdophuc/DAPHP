@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -17,9 +18,16 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
+        protected function checkAdmin()
+    {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
+    }
     // Hiển thị form tạo sản phẩm mới
     public function create()
     {
+        $this->checkAdmin();
         $categories = Category::all();
         $brands = Brand::all();
         return view('products.create', compact('categories', 'brands'));
@@ -28,6 +36,7 @@ class ProductController extends Controller
     // Lưu sản phẩm mới
     public function store(Request $request)
     {
+        $this->checkAdmin();
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
@@ -71,6 +80,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
+        $this->checkAdmin();
         $categories = Category::all();
         $brands = Brand::all();
         return view('products.edit', compact('product', 'categories', 'brands'));
@@ -80,7 +90,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-
+        $this->checkAdmin();
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
@@ -117,6 +127,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
+        $this->checkAdmin();
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Sản phẩm đã bị xóa.');

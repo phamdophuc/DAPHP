@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -21,6 +22,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         return view('categories.create');
     }
 
@@ -29,6 +33,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -43,6 +50,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $category = Category::find($id);
 
         if (!$category) {
@@ -57,6 +67,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $category = Category::find($id);
 
         if (!$category) {
@@ -77,6 +90,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $category = Category::find($id);
 
         if (!$category) {

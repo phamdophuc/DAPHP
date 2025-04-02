@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BrandController extends Controller
 {
@@ -21,6 +22,9 @@ class BrandController extends Controller
      */
     public function create()
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         return view('brands.create');
     }
 
@@ -29,6 +33,9 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -43,6 +50,9 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $brand = Brand::findOrFail($id);
 
         if (!$brand) {
@@ -57,6 +67,9 @@ class BrandController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $brand = Brand::findOrFail($id);
 
         $validated = $request->validate([
@@ -73,6 +86,9 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'Bạn không có quyền truy cập!');
+        }
         $brand = Brand::find($id);
 
         if (!$brand) {
