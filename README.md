@@ -4,7 +4,9 @@
 
 //Kiểm tra trong file .env phần APP_KEY có giá trị hay không, nếu không thì chạy php artisan key:generate.
 
-//Nếu không có folder node_modules thì chạy npm install và npm run dev.
+//Nếu không có folder node_modules thì chạy npm install và npm run build.
+
+//Chạy thêm php artisan storage:link khi clone branch Cart về.
 
 <<<<<<< HEAD
 # DAPHP
