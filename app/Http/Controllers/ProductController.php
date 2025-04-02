@@ -9,14 +9,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
     // Hiển thị danh sách sản phẩm
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'brand'])->orderBy('created_date', 'asc')->get();
-        return view('products.index', compact('products'));
+        $filters = $request->only(['query', 'category_id', 'brand_id', 'min_price', 'max_price']);
+
+        $products = Product::filter($filters)
+            ->with(['category', 'brand'])
+            ->orderBy('created_date', 'desc')
+            ->paginate(10)
+            ->appends(request()->query());
+
+        $categories = Category::all();
+        $brands = Brand::all();
+
+        return view('products.index', compact('products', 'categories', 'brands', 'filters'));
     }
 
         protected function checkAdmin()
