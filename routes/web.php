@@ -8,6 +8,8 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CartController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -79,6 +81,18 @@ Route::prefix('order-details')->group(function () {
 
     Route::get('/{id}', [OrderDetailController::class, 'show'])->name('order-details.show');
 });
+
+// Cart
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::delete('/remove/{cartId}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+});
+
+
+// Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 
 
 Route::get('/dashboard', function () {

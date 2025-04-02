@@ -8,13 +8,14 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     // Hiển thị danh sách sản phẩm
     public function index()
     {
-        $products = Product::with(['category', 'brand'])->orderBy('created_date', 'desc')->get();
+        $products = Product::with(['category', 'brand'])->orderBy('created_date', 'asc')->get();
         return view('products.index', compact('products'));
     }
 
@@ -53,6 +54,10 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
+
+        if (!Storage::exists('public/products')) {
+            Storage::makeDirectory('public/products');
+        }
 
         $data = $request->all();
         if ($request->hasFile('image_url')) {
@@ -108,8 +113,16 @@ class ProductController extends Controller
             'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
+        if (!Storage::exists('public/products')) {
+            Storage::makeDirectory('public/products');
+        }
+
         $data = $request->all();
         if ($request->hasFile('image_url')) {
+            if ($product->image_url && Storage::exists('public/' . $product->image_url)) {
+                Storage::delete('public/' . $product->image_url);
+            }
+    
             $imagePath = $request->file('image_url')->store('products', 'public');
             $data['image_url'] = $imagePath;
         }

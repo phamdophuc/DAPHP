@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@php
+    use Illuminate\Support\Str;
+@endphp
 
 @section('content')
     <div class="container">
@@ -54,7 +57,7 @@
                 <label for="image_url">Product Image</label>
                 <input type="file" name="image_url" class="form-control">
                 @if ($product->image_url)
-                    <img src="{{ asset('storage/' . $product->image_url) }}" alt="Product Image" class="img-thumbnail mt-2" width="150">
+                    <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
                 @endif
             </div>
 

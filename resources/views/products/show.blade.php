@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="img-fluid">
+                        <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-fluid">
                     </div>
                     <div class="col-md-6">
                         <p><strong>Danh mục:</strong> {{ $product->category->name }}</p>
