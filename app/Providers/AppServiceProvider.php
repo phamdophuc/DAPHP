@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {   
         Gate::define('admin', function (?User $user) {
-            return optional($user->role)->name === 'admin';
+            return $user && $user->role && $user->role->name === 'admin';
        });
     }
 }
