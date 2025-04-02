@@ -47,4 +47,25 @@ class Product extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
+    public function scopeFilter($query, $filters)
+    {
+    if (!empty($filters['query'])) {
+        $query->where('name', 'like', "%{$filters['query']}%")
+              ->orWhere('description', 'like', "%{$filters['query']}%");
+    }
+    if (!empty($filters['category_id'])) {
+        $query->where('category_id', $filters['category_id']);
+    }
+    if (!empty($filters['brand_id'])) {
+        $query->where('brand_id', $filters['brand_id']);
+    }
+    if (!empty($filters['min_price'])) {
+        $query->where('price', '>=', $filters['min_price']>= 0);
+    }
+    if (!empty($filters['max_price'])) {
+        $query->where('price', '<=', $filters['max_price']>= 0);
+    }
+    return $query;
+    }
+
 }
