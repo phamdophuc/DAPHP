@@ -44,4 +44,10 @@
         </div>
         
     </form>
+    <div class="mt-4 text-center">
+        <span>{{ __("Don't have an account?") }}</span>
+        <a href="{{ route('register') }}" class="text-indigo-600 hover:text-indigo-900">
+            {{ __('Register here') }}
+        </a>
+    </div>
 </x-guest-layout>

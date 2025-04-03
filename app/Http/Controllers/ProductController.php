@@ -20,7 +20,7 @@ class ProductController extends Controller
 
         $products = Product::filter($filters)
             ->with(['category', 'brand'])
-            ->orderBy('created_date', 'desc')
+            ->orderBy('created_date', 'asc')
             ->paginate(10)
             ->appends(request()->query());
 

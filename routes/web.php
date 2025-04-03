@@ -58,7 +58,6 @@ Route::prefix('brands')->group(function () {
 
 // Routes for Orders
 Route::prefix('orders')->group(function () {
-    Route::get('/', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/', [OrderController::class, 'store'])->name('orders.store');
 
@@ -93,6 +92,10 @@ Route::prefix('cart')->group(function () {
 // Checkout
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+Route::get('/checkout/success', function () {
+    return view('checkout.success');
+})->name('checkout.success');
+
 
 
 Route::get('/dashboard', function () {
@@ -103,6 +106,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
+    Route::post('/', [OrderController::class, 'store'])->name('orders.store');
+
+    Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/{id}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });
 
 require __DIR__.'/auth.php';
