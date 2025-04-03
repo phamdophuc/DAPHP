@@ -30,8 +30,10 @@ class OrderDetailController extends Controller
         $request->validate([
             'order_id' => 'required|exists:orders,id',
             'product_id' => 'required|exists:products,id',
+            'order_date' => 'required|date',
             'quantity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         OrderDetail::create($request->all());
@@ -64,10 +66,13 @@ class OrderDetailController extends Controller
         }
 
         $request->validate([
+            'user_id' => 'required|exists:users,id',
             'order_id' => 'required|exists:orders,id',
             'product_id' => 'required|exists:products,id',
+            'order_date' => 'required|date',
             'quantity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         $orderDetail->update($request->all());

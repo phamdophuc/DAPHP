@@ -18,6 +18,10 @@ class CheckoutController extends Controller
 
     public function processCheckout(Request $request)
     {
+        $request->validate([
+            'address' => 'required|string|max:255',
+        ]);
+
         $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
         
         if ($cartItems->isEmpty()) {
@@ -28,6 +32,9 @@ class CheckoutController extends Controller
             'user_id' => Auth::id(),
             'total_price' => $cartItems->sum(fn($item) => $item->product->price * $item->quantity),
             'status' => 'pending',
+            'ship_address' => $request->address,
+            'order_date' => now(),
+            'notes' => $request->notes,
         ]);
 
         foreach ($cartItems as $item) {

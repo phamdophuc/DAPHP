@@ -69,19 +69,19 @@ class OrderController extends Controller
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Order not found');
         }
+
         $order->update([
-            'user_id' => $request->user_id,
-            'order_date' => $request->order_date,
-            'total_price' => $request->total_price,
-            'ship_address' => $request->ship_address,
+            'user_id' => $request->user_id ?? $order->user_id,
+            'order_date' => $request->order_date ?? $order->order_date,
+            'total_price' => $request->total_price ?? $order->total_price,
+            'ship_address' => $request->ship_address ?? $order->ship_address,
+            'notes' => $request->notes ?? $order->notes,
             'status' => $request->status, 
         ]);
 
-
-        $order->update($request->all());
-
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
     }
+
 
     // Remove the specified order from storage
     public function destroy($id)

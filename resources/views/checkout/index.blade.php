@@ -30,12 +30,18 @@
                             @endforeach
                         </tbody>
                     </table>
-
+                    <div class="form-group">
+                        <label for="order_date">Ngày Đặt Hàng</label>
+                        <input type="date" name="order_date" id="order_date" class="form-control" value="{{ old('order_date', now()->format('Y-m-d')) }}" required>
+                    </div>
                     <div class="form-group">
                         <label for="address">Địa Chỉ Giao Hàng</label>
-                        <textarea name="address" id="address" class="form-control" required></textarea>
+                        <textarea name="address" id="address" class="form-control" required>{{ old('address') }}</textarea>
                     </div>
-
+                    <div class="form-group">
+                        <label for="notes">Ghi Chú</label>
+                        <textarea name="notes" id="notes" class="form-control">{{ old('notes') }}</textarea>
+                    </div>
                     <div class="form-group">
                         <label for="payment_method">Phương Thức Thanh Toán</label>
                         <select name="payment_method" id="payment_method" class="form-control" required>

@@ -9,11 +9,13 @@
             <tr>
             @if (Gate::allows('admin'))
                 <th>ID</th>
-                <th>User</th>
+                <th>User Id</th>
             @endif
+                <th>UserEmail</th>
                 <th>Order Date</th>
                 <th>Total Price</th>
                 <th>Ship Address</th>
+                <th>Notes</th>
                 <th>Status</th>
                 @if (Gate::allows('admin'))
                     <th>Actions</th>
@@ -22,14 +24,16 @@
         </thead>
         <tbody>
             @foreach ($orders as $order)
-                <tr>
+                <tr>    
                     @if (Gate::allows('admin'))
                         <td>{{ $order->id }}</td>
+                        <td>{{ $order->user->id }}</td>
                     @endif
-                    <td>{{ $order->user->name }}</td>
+                    <td>{{ $order->user->email }}</td>
                     <td>{{ $order->order_date }}</td>
                     <td>{{ $order->total_price }}</td>
                     <td>{{ $order->ship_address }}</td>
+                    <td>{{ $order->notes }}</td>
                     <td>{{ ucfirst($order->status) }}</td>
                     @if (Gate::allows('admin'))
                     <td>
