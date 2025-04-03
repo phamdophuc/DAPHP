@@ -59,7 +59,9 @@
                         </li>
                     </ul>
 
-                    <button type="submit" class="btn btn-success btn-lg btn-block">Đặt Hàng</button>
+                    <button type="submit" class="btn btn-success btn-lg btn-block" onclick="return confirmOrder()">Đặt Hàng</button>
+
+                    <a href="{{ route('cart.index') }}" class="btn btn-danger btn-lg btn-block mt-2">Quay lại giỏ hàng</a>
                 </div>
             </div>
         </form>
@@ -68,3 +70,11 @@
     @endif
 </div>
 @endsection
+@section('scripts')
+<script>
+    function confirmOrder() {
+        return confirm("Bạn có chắc chắn muốn đặt hàng không?");
+    }
+</script>
+@endsection
+

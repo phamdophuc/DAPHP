@@ -3,13 +3,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     // Display a listing of the orders
     public function index()
     {
-        $orders = Order::with('user')->get(); // Fetch orders with user data
+        $user = Auth::user(); // 🔹 Lấy user đang đăng nhập
+
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để xem lịch sử đơn hàng.');
+        }
+
+        if ($user->role && $user->role->name === 'admin') {
+            $orders = Order::with('user')->latest()->get(); // 🔹 Admin xem tất cả đơn hàng
+        } else {
+            $orders = Order::where('user_id', $user->id)->latest()->get(); // 🔹 User chỉ xem đơn hàng của họ
+        }
         return view('orders.index', compact('orders'));
     }
 
