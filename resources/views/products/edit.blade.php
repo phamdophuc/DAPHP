@@ -6,8 +6,6 @@
 @section('content')
     <div class="container">
         <h1>Edit Product</h1>
-
-        {{-- Hiển thị lỗi --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -21,14 +19,10 @@
         <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-
-            {{-- Tên sản phẩm --}}
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}" required>
             </div>
-
-            {{-- Giá & Giá khuyến mãi --}}
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -45,14 +39,10 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Mô tả sản phẩm --}}
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
             </div>
-
-            {{-- Hình ảnh --}}
             <div class="form-group">
                 <label for="image_url">Product Image</label>
                 <input type="file" name="image_url" class="form-control">
@@ -60,8 +50,6 @@
                     <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
                 @endif
             </div>
-
-            {{-- Danh mục & Thương hiệu --}}
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -88,14 +76,10 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Số lượng --}}
             <div class="form-group">
                 <label for="quantity">Quantity</label>
                 <input type="number" name="quantity" class="form-control" value="{{ old('quantity', $product->quantity) }}" required>
             </div>
-
-            {{-- Trạng thái --}}
             <div class="form-group">
                 <label for="status">Status</label>
                 <select name="status" class="form-control">
@@ -103,8 +87,6 @@
                     <option value="0" {{ !$product->status ? 'selected' : '' }}>Inactive</option>
                 </select>
             </div>
-
-            {{-- Hot Product --}}
             <div class="form-group">
                 <label for="is_hot">Is Hot?</label>
                 <select name="is_hot" class="form-control">
@@ -112,8 +94,6 @@
                     <option value="0" {{ !$product->is_hot ? 'selected' : '' }}>No</option>
                 </select>
             </div>
-
-            {{-- Ngày bắt đầu & kết thúc hot --}}
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -130,8 +110,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- SEO --}}
             <div class="form-group">
                 <label for="seo_title">SEO Title</label>
                 <input type="text" name="seo_title" class="form-control" value="{{ old('seo_title', $product->seo_title) }}">
@@ -140,8 +118,6 @@
                 <label for="meta_keyword">Meta Keyword</label>
                 <input type="text" name="meta_keyword" class="form-control" value="{{ old('meta_keyword', $product->meta_keyword) }}">
             </div>
-
-            {{-- Nút thao tác --}}
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>
         </form>
