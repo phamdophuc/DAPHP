@@ -165,7 +165,7 @@ h1 {
             </div>
         </form>
 
-        @if (Gate::allows('create-product'))
+        @if (Gate::allows('admin'))
             <div class="mb-3 text-end">
                 <a href="{{ route('products.create') }}" class="btn btn-success">+ Thêm Sản Phẩm</a>
             </div>
@@ -176,7 +176,10 @@ h1 {
             <table class="table table-striped table-hover shadow-sm">
                 <thead class="table-dark text-center">
                     <tr>
-                        <th>ID</th>
+                        @if (Gate::allows('admin'))
+                            <th>ID</th>
+                        @endif
+
                         <th>Hình ảnh</th>
                         <th>Tên sản phẩm</th>
                         <th>Thể loại</th>
@@ -188,7 +191,9 @@ h1 {
                 <tbody>
                     @foreach ($products as $product)
                         <tr class="align-middle">
+                        @if (Gate::allows('admin'))
                             <td class="text-center">{{ $product->id }}</td>
+                        @endif
                             <td class="text-center">
                                 <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" 
                                     alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
@@ -206,12 +211,14 @@ h1 {
                             </td>
                             <td class="text-center">
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm">🔍</a>
-                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">✏️</a>
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?');">🗑️</button>
-                                </form>
+                                @if (Gate::allows('admin'))
+                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">✏️</a>
+                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?');">🗑️</button>
+                                        </form>
+                                @endif
                                 <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-sm">🛒</button>

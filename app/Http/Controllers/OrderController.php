@@ -52,12 +52,13 @@ class OrderController extends Controller
     public function edit($id)
     {
         $order = Order::find($id);
+        $users = User::all();
 
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Order not found');
         }
 
-        return view('orders.edit', compact('order'));
+        return view('orders.edit', compact('order',  'users'));
     }
 
     // Update the specified order in storage
@@ -68,15 +69,14 @@ class OrderController extends Controller
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Order not found');
         }
-
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'status' => 'required|in:pending,completed,canceled',
-            'total_price' => 'required|numeric|min:0',
-            'order_date' => 'required|date',
-            'ship_address' => 'nullable|string|max:255',
-            'notes' => 'nullable|string|max:500',
+        $order->update([
+            'user_id' => $request->user_id,
+            'order_date' => $request->order_date,
+            'total_price' => $request->total_price,
+            'ship_address' => $request->ship_address,
+            'status' => $request->status, 
         ]);
+
 
         $order->update($request->all());
 

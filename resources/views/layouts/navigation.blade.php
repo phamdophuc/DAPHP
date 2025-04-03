@@ -13,8 +13,15 @@
                     </x-nav-link>
                 </div>
             </div>
+
             @auth
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <div class="flex items-center space-x-4">
+                    <!-- Nút giỏ hàng -->
+                    <a href="{{ route('cart.index') }}" class="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white flex items-center">
+                        🛒 <span class="ml-1">Giỏ hàng</span>
+                    </a>
+
+                    <!-- Dropdown tài khoản -->
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -32,6 +39,9 @@
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('orders.index')">
+                                {{ __('Orders') }}
                             </x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
