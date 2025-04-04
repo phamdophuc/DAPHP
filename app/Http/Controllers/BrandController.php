@@ -16,15 +16,18 @@ class BrandController extends Controller
         $brands = Brand::all();
         return view('brands.index', compact('brands'));
     }
-
+    protected function checkAdmin()
+    {
+        if (Gate::denies('admin')) {
+            redirect()->route('access.denied')->send();
+        }
+    }
     /**
      * Show the form for creating a new brand.
      */
     public function create()
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         return view('brands.create');
     }
 
@@ -33,9 +36,7 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -50,9 +51,7 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $brand = Brand::findOrFail($id);
 
         if (!$brand) {
@@ -67,9 +66,7 @@ class BrandController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $brand = Brand::findOrFail($id);
 
         $validated = $request->validate([
@@ -86,9 +83,7 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $brand = Brand::find($id);
 
         if (!$brand) {

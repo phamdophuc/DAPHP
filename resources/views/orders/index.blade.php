@@ -3,7 +3,16 @@
 @section('content')
 <div class="container">
     <h1>Order List</h1>
-
+    @if (Gate::allows('admin'))
+        <form action="{{ route('orders.index') }}" method="GET" class="d-flex mb-4 flex-wrap align-items-center">
+            <input type="text" name="order_id" class="form-control me-2 mb-2" style="width: 150px;" placeholder="Order ID" value="{{ request('order_id') }}">
+            <input type="text" name="user_id" class="form-control me-2 mb-2" style="width: 150px;" placeholder="User ID" value="{{ request('user_id') }}">
+            <input type="text" name="email" class="form-control me-2 mb-2" style="width: 200px;" placeholder="Email người dùng" value="{{ request('email') }}">
+            
+            <button type="submit" class="btn btn-primary me-2 mb-2">Tìm kiếm</button>
+            <a href="{{ route('orders.index') }}" class="btn btn-secondary mb-2">Reset</a>
+        </form>
+    @endif
     <table class="table table-bordered">
         <thead>
             <tr>

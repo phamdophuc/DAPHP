@@ -33,7 +33,7 @@ class ProductController extends Controller
         protected function checkAdmin()
     {
         if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
+            redirect()->route('access.denied')->send();
         }
     }
     // Hiển thị form tạo sản phẩm mới

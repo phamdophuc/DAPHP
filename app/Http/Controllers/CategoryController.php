@@ -16,15 +16,19 @@ class CategoryController extends Controller
         $categories = Category::all();
         return view('categories.index', compact('categories'));
     }
-
+    protected function checkAdmin()
+    {
+        if (Gate::denies('admin')) {
+            redirect()->route('access.denied')->send();
+        }
+    }
+    
     /**
      * Show the form for creating a new category.
      */
     public function create()
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         return view('categories.create');
     }
 
@@ -33,9 +37,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -50,9 +52,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $category = Category::find($id);
 
         if (!$category) {
@@ -67,9 +67,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $category = Category::find($id);
 
         if (!$category) {
@@ -90,9 +88,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
-        }
+        $this->checkAdmin();
         $category = Category::find($id);
 
         if (!$category) {

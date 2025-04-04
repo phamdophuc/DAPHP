@@ -35,9 +35,8 @@ class OrderDetailController extends Controller
             'price' => 'required|numeric|min:0',
             'notes' => 'nullable|string|max:500',
         ]);
-
         OrderDetail::create($request->all());
-
+       
         return redirect()->route('order_details.index')->with('success', 'Chi tiết đơn hàng đã được tạo.');
     }
 
