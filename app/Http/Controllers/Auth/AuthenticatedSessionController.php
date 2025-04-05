@@ -24,11 +24,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+    
+        // Attempt to log the user in
+        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+            $request->session()->regenerate();
+    
+            // Redirect to the products page instead of dashboard
+            return redirect()->route('products.index');
+        }
+    
+        return back()->withErrors([
+            'email' => 'Sai Email đăng nhập',
+            'password' => 'Sai mật khẩu',
+        ]);
     }
 
     /**

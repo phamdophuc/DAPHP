@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -15,12 +16,19 @@ class CategoryController extends Controller
         $categories = Category::all();
         return view('categories.index', compact('categories'));
     }
-
+    protected function checkAdmin()
+    {
+        if (Gate::denies('admin')) {
+            redirect()->route('access.denied')->send();
+        }
+    }
+    
     /**
      * Show the form for creating a new category.
      */
     public function create()
     {
+        $this->checkAdmin();
         return view('categories.create');
     }
 
@@ -29,6 +37,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->checkAdmin();
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -41,16 +50,30 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified category.
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
+        $this->checkAdmin();
+        $category = Category::find($id);
+
+        if (!$category) {
+            return redirect()->route('categories.index')->with('error', 'Category not found');
+        }
+
         return view('categories.edit', compact('category'));
     }
 
     /**
      * Update the specified category in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
+        $this->checkAdmin();
+        $category = Category::find($id);
+
+        if (!$category) {
+            return redirect()->route('categories.index')->with('error', 'Category not found');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -63,8 +86,15 @@ class CategoryController extends Controller
     /**
      * Remove the specified category from storage.
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
+        $this->checkAdmin();
+        $category = Category::find($id);
+
+        if (!$category) {
+            return redirect()->route('categories.index')->with('error', 'Category not found');
+        }
+
         $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
