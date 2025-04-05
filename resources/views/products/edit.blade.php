@@ -1,7 +1,11 @@
 @extends('layouts.app')
 @php
     use Illuminate\Support\Str;
+    use Carbon\Carbon;
+    $hotStartDate = $product->hot_start_date ? Carbon::parse($product->hot_start_date)->setTimezone('Asia/Ho_Chi_Minh') : null;
+    $hotEndDate = $product->hot_end_date ? Carbon::parse($product->hot_end_date)->setTimezone('Asia/Ho_Chi_Minh') : null;
 @endphp
+
 <style>
     /* Basic Container Styling */
 .container {
@@ -156,9 +160,9 @@ select.form-control, input.form-control {
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="promotion_price">Promotion Price</label>
-                        <input type="number" step="0.01" name="promotion_price" class="form-control" 
-                               value="{{ old('promotion_price', $product->promotion_price) }}">
+                        <label for="discount">Discount (%)</label>
+                        <input type="number" step="0.01" name="discount" class="form-control" value="{{ old('discount') }}">
+                        <small class="form-text text-muted">Nếu có giảm giá, nhập tỷ lệ phần trăm.</small>
                     </div>
                 </div>
             </div>
@@ -222,14 +226,14 @@ select.form-control, input.form-control {
                     <div class="form-group">
                         <label for="hot_start_date">Hot Start Date</label>
                         <input type="datetime-local" name="hot_start_date" class="form-control"
-                               value="{{ old('hot_start_date', $product->hot_start_date ? date('Y-m-d\TH:i', strtotime($product->hot_start_date)) : '') }}">
+                            value="{{ old('hot_start_date', $hotStartDate ? $hotStartDate->format('Y-m-d\TH:i') : '') }}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="hot_end_date">Hot End Date</label>
                         <input type="datetime-local" name="hot_end_date" class="form-control"
-                               value="{{ old('hot_end_date', $product->hot_end_date ? date('Y-m-d\TH:i', strtotime($product->hot_end_date)) : '') }}">
+                            value="{{ old('hot_end_date', $hotEndDate ? $hotEndDate->format('Y-m-d\TH:i') : '') }}">
                     </div>
                 </div>
             </div>

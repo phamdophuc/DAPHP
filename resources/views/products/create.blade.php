@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 
 <style>
     /* Basic Container Styles */
@@ -127,8 +131,9 @@ select.form-control, input.form-control {
             </div>
 
             <div class="form-group">
-                <label for="promotion_price">Promotion Price</label>
-                <input type="number" step="0.01" name="promotion_price" class="form-control" value="{{ old('promotion_price') }}">
+                <label for="discount">Discount (%)</label>
+                <input type="number" step="0.01" name="discount" class="form-control" value="{{ old('discount') }}">
+                <small class="form-text text-muted">Nếu có giảm giá, nhập tỷ lệ phần trăm.</small>
             </div>
 
             <div class="form-group">
@@ -186,9 +191,13 @@ select.form-control, input.form-control {
                 <input type="datetime-local" name="hot_end_date" class="form-control" value="{{ old('hot_end_date') }}">
             </div>
 
+
             <div class="form-group">
                 <label for="image_url">Product Image</label>
                 <input type="file" name="image_url" class="form-control">
+                @if (isset($product) && $product->image_url)
+                    <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
+                @endif
             </div>
 
             <div class="form-group">

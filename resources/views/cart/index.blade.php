@@ -124,7 +124,19 @@ a:hover {
                     <tr>
                         <td>{{ $item->product->name }}</td>
                         <td>{{ $item->quantity }}</td>
-                        <td>{{ number_format($item->product->price * $item->quantity, 0, ',', '.') }} VND</td>
+                        <td>
+                            @if($item->product->promotion_price)
+                                <span style="color: red; text-decoration: line-through;">
+                                    {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }} VND
+                                </span>
+                                <br>
+                                <span>
+                                    {{ number_format($item->product->promotion_price * $item->quantity, 0, ',', '.') }} VND
+                                </span>
+                            @else
+                                {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }} VND
+                            @endif
+                        </td>
                         <td>
                             <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                 @csrf

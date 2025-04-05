@@ -184,8 +184,11 @@ h1 {
                             <td class="text-center">{{ $product->id }}</td>
                         @endif
                             <td class="text-center">
-                                <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" 
-                                    alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
+                            @if(Str::startsWith($product->image_url, ['http://', 'https://']))
+                                <img src="{{ $product->image_url }}" alt="Ảnh sản phẩm" width="120">
+                            @else
+                                <img src="{{ asset('storage/' . $product->image_url) }}" alt="Ảnh sản phẩm" width="120">
+                            @endif
                             </td>
                             <td>{{ $product->name }}</td>
                             <td class="text-center">{{ $product->category->name ?? 'N/A' }}</td>

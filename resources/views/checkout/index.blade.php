@@ -153,9 +153,33 @@ textarea, input[type="date"], select {
                             @foreach ($cartItems as $cartItem)
                                 <tr>
                                     <td>{{ $cartItem->product->name }}</td>
-                                    <td>{{ number_format($cartItem->product->price, 0, ',', '.') }} VND</td>
+                                    <td>
+                                        @if($cartItem->product->promotion_price)
+                                            <span style="color: red; text-decoration: line-through;">
+                                                {{ number_format($cartItem->product->price, 0, ',', '.') }} VND
+                                            </span>
+                                            <br>
+                                            <span>
+                                                {{ number_format($cartItem->product->promotion_price, 0, ',', '.') }} VND
+                                            </span>
+                                        @else
+                                            {{ number_format($cartItem->product->price, 0, ',', '.') }} VND
+                                        @endif
+                                    </td>
                                     <td>{{ $cartItem->quantity }}</td>
-                                    <td>{{ number_format($cartItem->product->price * $cartItem->quantity, 0, ',', '.') }} VND</td>
+                                    <td>
+                                        @if($cartItem->product->promotion_price)
+                                            <span style="color: red; text-decoration: line-through;">
+                                                {{ number_format($cartItem->product->price * $cartItem->quantity, 0, ',', '.') }} VND
+                                            </span>
+                                            <br>
+                                            <span>
+                                                {{ number_format($cartItem->product->promotion_price * $cartItem->quantity, 0, ',', '.') }} VND
+                                            </span>
+                                        @else
+                                            {{ number_format($cartItem->product->price * $cartItem->quantity, 0, ',', '.') }} VND
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -190,8 +214,10 @@ textarea, input[type="date"], select {
                             <strong>Tổng Số Mặt Hàng:</strong> {{ $cartItems->count() }}
                         </li>
                         <li class="list-group-item">
-                            <strong>Tổng Giá:</strong> 
-                            {{ number_format($cartItems->sum(function($item) { return $item->product->price * $item->quantity; }), 0, ',', '.') }} VND
+                        <strong>Tổng Giá:</strong> 
+                            {{ number_format($cartItems->sum(function($item) { 
+                                return $item->product->promotion_price ? $item->product->promotion_price * $item->quantity : $item->product->price * $item->quantity; 
+                            }), 0, ',', '.') }} VND
                         </li>
                     </ul>
 

@@ -52,7 +52,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'promotion_price' => 'nullable|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'quantity' => 'required|integer|min:0',
@@ -71,13 +71,37 @@ class ProductController extends Controller
         }
 
         $data = $request->all();
+
+        
+        $data['hot_start_date'] = $request->hot_start_date ? \Carbon\Carbon::parse($request->hot_start_date)->timezone('Asia/Ho_Chi_Minh')->format('Y-m-d H:i:s') : null;
+        $data['hot_end_date'] = $request->hot_end_date ? \Carbon\Carbon::parse($request->hot_end_date)->timezone('Asia/Ho_Chi_Minh')->format('Y-m-d H:i:s') : null;
+
+        
+
+        $currentTime = now('Asia/Ho_Chi_Minh');
+
+        if ($request->has('hot_start_date') && $request->has('hot_end_date')) {
+            $hotStart = \Carbon\Carbon::parse($data['hot_start_date'])->timezone('Asia/Ho_Chi_Minh');
+            $hotEnd = \Carbon\Carbon::parse($data['hot_end_date'])->timezone('Asia/Ho_Chi_Minh');
+            //dd($hotStart, $hotEnd, $currentTime);
+                 
+            if ($currentTime->between($hotStart, $hotEnd) && $data['status'] === '1' && $data['is_hot'] === '1') {
+
+                if ($request->has('discount') && $request->discount > 0) {
+                    $discountedPrice = $data['price'] - ($data['price'] * $request->discount / 100); 
+                    $data['promotion_price'] = $discountedPrice;
+                }
+            } else {
+                $data['promotion_price'] = null; 
+            }
+        }
+
         if ($request->hasFile('image_url')) {
             $imagePath = $request->file('image_url')->store('products', 'public');
             $data['image_url'] = $imagePath;
+        } elseif ($request->has('image_url') && filter_var($request->image_url, FILTER_VALIDATE_URL)) {
+            $data['image_url'] = $request->image_url; 
         }
-
-        $data['hot_start_date'] = $request->hot_start_date ? date('Y-m-d H:i:s', strtotime($request->hot_start_date)) : null;
-        $data['hot_end_date'] = $request->hot_end_date ? date('Y-m-d H:i:s', strtotime($request->hot_end_date)) : null;
 
         $data['created_by'] = Auth::id();
         Product::create($data);
@@ -110,7 +134,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'promotion_price' => 'nullable|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'quantity' => 'required|integer|min:0',
@@ -129,17 +153,39 @@ class ProductController extends Controller
         }
 
         $data = $request->all();
-        if ($request->hasFile('image_url')) {
-            if ($product->image_url && Storage::exists('public/' . $product->image_url)) {
-                Storage::delete('public/' . $product->image_url);
+
+        $data['hot_start_date'] = $request->hot_start_date ? \Carbon\Carbon::parse($request->hot_start_date)->timezone('Asia/Ho_Chi_Minh')->format('Y-m-d H:i:s') : null;
+        $data['hot_end_date'] = $request->hot_end_date ? \Carbon\Carbon::parse($request->hot_end_date)->timezone('Asia/Ho_Chi_Minh')->format('Y-m-d H:i:s') : null;
+
+        
+
+        $currentTime = now('Asia/Ho_Chi_Minh');
+
+        if ($request->has('hot_start_date') && $request->has('hot_end_date')) {
+            $hotStart = \Carbon\Carbon::parse($data['hot_start_date'])->timezone('Asia/Ho_Chi_Minh');
+            $hotEnd = \Carbon\Carbon::parse($data['hot_end_date'])->timezone('Asia/Ho_Chi_Minh');
+
+            //dd($hotStart, $hotEnd, $currentTime);
+            
+     
+            if ($currentTime->between($hotStart, $hotEnd) && $data['status'] === '1' && $data['is_hot'] === '1') {
+                if ($request->has('discount') && $request->discount > 0) {
+                    $discountedPrice = $data['price'] - ($data['price'] * $request->discount / 100); 
+                    $data['promotion_price'] = $discountedPrice;
+                }
+            } else {
+                $data['promotion_price'] = null; 
             }
-    
-            $imagePath = $request->file('image_url')->store('products', 'public');
-            $data['image_url'] = $imagePath;
         }
 
-        $data['hot_start_date'] = $request->hot_start_date ? date('Y-m-d H:i:s', strtotime($request->hot_start_date)) : null;
-        $data['hot_end_date'] = $request->hot_end_date ? date('Y-m-d H:i:s', strtotime($request->hot_end_date)) : null;
+
+        if ($request->hasFile('image_url')) {
+            $imagePath = $request->file('image_url')->store('products', 'public');
+            $data['image_url'] = $imagePath;
+        } elseif ($request->has('image_url') && filter_var($request->image_url, FILTER_VALIDATE_URL)) {
+            $data['image_url'] = $request->image_url; 
+        }
+
 
         $data['updated_by'] = Auth::id();
         $product->update($data);

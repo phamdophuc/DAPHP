@@ -30,7 +30,7 @@ class CheckoutController extends Controller
 
         $order = Order::create([
             'user_id' => Auth::id(),
-            'total_price' => $cartItems->sum(fn($item) => $item->product->price * $item->quantity),
+            'total_price' => $cartItems->sum(fn($item) => $item->product->promotion_price ?? $item->product->price * $item->quantity),
             'status' => 'pending',
             'ship_address' => $request->address,
             'order_date' => now(),

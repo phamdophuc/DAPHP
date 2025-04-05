@@ -43,6 +43,7 @@ class OrderController extends Controller
             $q->where('email', 'like', '%' . $request->input('email') . '%');
         });
     }
+    
 
     $orders = $query->get();
 
@@ -102,8 +103,7 @@ class OrderController extends Controller
             'total_price' => $request->total_price ?? $order->total_price,
             'ship_address' => $request->ship_address ?? $order->ship_address,
             'notes' => $request->notes ?? $order->notes,
-            'status' => $request->status, 
-            'image_url' => $request->hasFile('image_url') ? $request->file('image_url')->store('products', 'public') : $order->image_url,
+            'status' => $request->status,
         ]);
 
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');

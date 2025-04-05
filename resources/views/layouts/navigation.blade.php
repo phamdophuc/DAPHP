@@ -92,16 +92,19 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')" class="text-sm">
-                            {{ __('Profile') }}
+                            {{ __('Thông tin cá nhân') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('orders.index')" class="text-sm">
-                            {{ __('Orders') }}
+                            {{ __('Lịch sử đơn hàng') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('order-details.index')" class="text-sm">
+                            {{ __('Chi tiết đơn hàng') }}
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault(); this.closest('form').submit();" class="text-sm">
-                                {{ __('Log Out') }}
+                                {{ __('Đăng xuất') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>

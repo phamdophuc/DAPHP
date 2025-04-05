@@ -72,12 +72,6 @@ Route::prefix('orders')->group(function () {
 // Routes for OrderDetails
 Route::prefix('order-details')->group(function () {
     Route::get('/', [OrderDetailController::class, 'index'])->name('order-details.index');
-    Route::get('/create', [OrderDetailController::class, 'create'])->name('order-details.create');
-    Route::post('/', [OrderDetailController::class, 'store'])->name('order-details.store');
-
-    Route::get('/edit/{id}', [OrderDetailController::class, 'edit'])->name('order-details.edit');
-    Route::put('/{id}', [OrderDetailController::class, 'update'])->name('order-details.update');
-    Route::delete('/{id}', [OrderDetailController::class, 'destroy'])->name('order-details.destroy');
 
     Route::get('/{id}', [OrderDetailController::class, 'show'])->name('order-details.show');
 });
@@ -115,6 +109,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::put('/{id}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+    Route::get('/order-details', [OrderDetailController::class, 'index'])->name('order-details.index');
+
+    Route::get('/order-details/{id}', [OrderDetailController::class, 'show'])->name('order-details.show');
+});
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });
 
 require __DIR__.'/auth.php';
