@@ -1,5 +1,135 @@
 @extends('layouts.app')
+<style>
+    /* Basic Container Styling */
+.container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
+h1 {
+    text-align: center;
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-size: 18px;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Form and Input Styling */
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    height: 120px;
+}
+
+textarea, input[type="date"], select {
+    margin-bottom: 20px;
+}
+
+/* Button Styling */
+.btn-success, .btn-danger {
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    width: 100%;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Summary Box Styling */
+.list-group-item {
+    font-size: 18px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.list-group-item strong {
+    font-weight: bold;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .btn-success, .btn-danger {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .col-md-8, .col-md-4 {
+        width: 100%;
+        padding: 10px;
+    }
+}
+</style>
 @section('content')
 <div class="container">
     <h1>Thanh Toán</h1>

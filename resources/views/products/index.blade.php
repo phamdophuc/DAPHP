@@ -3,6 +3,7 @@
 @php
     use Illuminate\Support\Str;
 @endphp
+
 <style>
     /* Định dạng chung */
 body {
@@ -31,12 +32,12 @@ h1 {
 /* Form Lọc Sản Phẩm */
 .filter-form {
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
     padding: 15px;
     background: #f1f1f1;
     border-radius: 5px;
     margin-bottom: 20px;
+    justify-content: space-between;
 }
 
 .filter-form input,
@@ -120,56 +121,45 @@ h1 {
 .action-buttons button:hover {
     opacity: 0.8;
 }
-
-        
 </style>
+
 @section('content')
     <div class="container py-4">
         <h1 class="mb-4 text-center text-primary">Danh Sách Sản Phẩm</h1>
-
-        <!-- Form Lọc Sản Phẩm -->
-        <form action="{{ route('products.index') }}" method="GET" class="mb-4 bg-light p-3 rounded shadow-sm">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-3">
-                    <input type="text" name="query" class="form-control" placeholder="🔍 Tìm sản phẩm..." value="{{ request('query') }}">
-                </div>
-                <div class="col-md-2">
-                    <select name="category_id" class="form-select">
-                        <option value="">-- Chọn danh mục --</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select name="brand_id" class="form-select">
-                        <option value="">-- Chọn thương hiệu --</option>
-                        @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
-                                {{ $brand->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="min_price" class="form-control" placeholder="Giá từ" value="{{ request('min_price') }}" min="0">
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="max_price" class="form-control" placeholder="Giá đến" value="{{ request('max_price') }}" min="0">
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-primary w-100">Lọc</button>
-                </div>
+        <form action="{{ route('products.index') }}" method="GET" class="filter-form mb-4 bg-light p-3 rounded shadow-sm">
+            <div class="col-md-3">
+                <input type="text" name="query" class="form-control" placeholder="🔍 Tìm sản phẩm..." value="{{ request('query') }}">
+            </div>
+            <div class="col-md-2">
+                <select name="category_id" class="form-select">
+                    <option value="">-- Chọn danh mục --</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="brand_id" class="form-select">
+                    <option value="">-- Chọn thương hiệu --</option>
+                    @foreach ($brands as $brand)
+                        <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
+                            {{ $brand->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="min_price" class="form-control" placeholder="Giá từ" value="{{ request('min_price') }}" min="0">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="max_price" class="form-control" placeholder="Giá đến" value="{{ request('max_price') }}" min="0">
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">Lọc</button>
             </div>
         </form>
-
-        @if (Gate::allows('admin'))
-            <div class="mb-3 text-end">
-                <a href="{{ route('products.create') }}" class="btn btn-success">+ Thêm Sản Phẩm</a>
-            </div>
-        @endif
 
         <!-- Bảng Danh Sách Sản Phẩm -->
         <div class="table-responsive">
@@ -179,7 +169,6 @@ h1 {
                         @if (Gate::allows('admin'))
                             <th>ID</th>
                         @endif
-
                         <th>Hình ảnh</th>
                         <th>Tên sản phẩm</th>
                         <th>Thể loại</th>

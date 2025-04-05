@@ -2,7 +2,130 @@
 @php
     use Illuminate\Support\Str;
 @endphp
+<style>
+    /* Basic Container Styling */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+}
+
+/* Error Message Styling */
+.alert {
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 15px;
+    background-color: #f8d7da;
+    border-radius: 5px;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert ul {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fdfdfd;
+}
+
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 4px rgba(40, 167, 69, 0.5);
+}
+
+/* File Input Styling */
+.form-control[type="file"] {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.img-thumbnail {
+    margin-top: 10px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+/* Row Layout for Two Inputs */
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.col-md-6 {
+    flex: 1;
+}
+
+/* Button Styling */
+.btn-success, .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 20px;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Textarea and Input Field Styling */
+textarea.form-control {
+    min-height: 120px;
+}
+
+select.form-control, input.form-control {
+    margin-bottom: 10px;
+}
+
+/* Add some space between the form elements */
+.form-group:last-child {
+    margin-bottom: 0;
+}
+</style>
 @section('content')
     <div class="container">
         <h1>Edit Product</h1>
@@ -109,14 +232,6 @@
                                value="{{ old('hot_end_date', $product->hot_end_date ? date('Y-m-d\TH:i', strtotime($product->hot_end_date)) : '') }}">
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="seo_title">SEO Title</label>
-                <input type="text" name="seo_title" class="form-control" value="{{ old('seo_title', $product->seo_title) }}">
-            </div>
-            <div class="form-group">
-                <label for="meta_keyword">Meta Keyword</label>
-                <input type="text" name="meta_keyword" class="form-control" value="{{ old('meta_keyword', $product->meta_keyword) }}">
             </div>
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>

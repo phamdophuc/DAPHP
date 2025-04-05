@@ -1,5 +1,103 @@
 @extends('layouts.app')
 
+<style>
+    /* Basic Container Styles */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+}
+
+/* Error Message Styling */
+.alert {
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 15px;
+    background-color: #f8d7da;
+    border-radius: 5px;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert ul {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #fdfdfd;
+}
+
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 4px rgba(40, 167, 69, 0.5);
+}
+
+/* Button Styles */
+.btn-success {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* File Input Styles */
+.form-control[type="file"] {
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Textarea Styles */
+textarea.form-control {
+    min-height: 120px;
+}
+
+/* Select and Input Field Styling */
+select.form-control, input.form-control {
+    margin-bottom: 10px;
+}
+
+/* Add some space between the form elements */
+.form-group:last-child {
+    margin-bottom: 0;
+}
+</style>
 @section('content')
     <div class="container">
         <h1>Add Product</h1>

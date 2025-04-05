@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use id;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -12,41 +13,42 @@ class OrderController extends Controller
     protected function checkAdmin()
     {
         if (Gate::denies('admin')) {
-            abort(403, 'Bạn không có quyền truy cập!');
+            redirect()->route('access.denied')->send();
         }
     }
     public function index(Request $request)
     {
-        $user = Auth::user();
+    $user = Auth::user();
 
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để xem lịch sử đơn hàng.');
-        }
-        
-        if ($user->role && $user->role->name === 'admin') {
-            $orders = Order::with('user')->latest()->get(); 
-        } else {
-            $orders = Order::where('user_id', $user->id)->latest()->get(); 
-        }
-        $query = Order::query()->with('user');
-
-        if ($request->filled('order_id')) {
-            $query->where('id', $request->input('order_id'));
-        }
-    
-        if ($request->filled('user_id')) {
-            $query->where('user_id', $request->input('user_id'));
-        }
-    
-        if ($request->filled('email')) {
-            $query->whereHas('user', function ($q) use ($request) {
-                $q->where('email', 'like', '%' . $request->input('email') . '%');
-            });
-        }
-    
-        $orders = $query->get();
-        return view('orders.index', compact('orders'));
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để xem lịch sử đơn hàng.');
     }
+
+    $query = Order::with('user')->orderByDesc('id'); 
+
+    if ($user->role && $user->role->name !== 'admin') {
+        $query->where('user_id', $user->id);
+    }
+
+    if ($request->filled('order_id')) {
+        $query->where('id', $request->input('order_id'));
+    }
+
+    if ($request->filled('user_id')) {
+        $query->where('user_id', $request->input('user_id'));
+    }
+
+    if ($request->filled('email')) {
+        $query->whereHas('user', function ($q) use ($request) {
+            $q->where('email', 'like', '%' . $request->input('email') . '%');
+        });
+    }
+
+    $orders = $query->get();
+
+    return view('orders.index', compact('orders'));
+    }
+
 
     public function create()
     {
@@ -73,6 +75,7 @@ class OrderController extends Controller
     // Show the form for editing the specified order
     public function edit($id)
     {
+        $this->checkAdmin();
         $order = Order::find($id);
         $users = User::all();
 
@@ -86,8 +89,9 @@ class OrderController extends Controller
     // Update the specified order in storage
     public function update(Request $request, $id)
     {
+        $this->checkAdmin();
         $order = Order::find($id);
-
+ 
         if (!$order) {
             return redirect()->route('orders.index')->with('error', 'Order not found');
         }
@@ -99,6 +103,7 @@ class OrderController extends Controller
             'ship_address' => $request->ship_address ?? $order->ship_address,
             'notes' => $request->notes ?? $order->notes,
             'status' => $request->status, 
+            'image_url' => $request->hasFile('image_url') ? $request->file('image_url')->store('products', 'public') : $order->image_url,
         ]);
 
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
@@ -108,6 +113,7 @@ class OrderController extends Controller
     // Remove the specified order from storage
     public function destroy($id)
     {
+        $this->checkAdmin();
         $order = Order::find($id);
 
         if (!$order) {
@@ -117,5 +123,17 @@ class OrderController extends Controller
         $order->delete();
 
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
+    }
+    public function cancel(Order $order)
+    {
+        $this->checkAdmin();
+        if (in_array($order->status, ['completed', 'canceled'])) {
+            return redirect()->back()->with('error', 'Không thể huỷ đơn hàng này.');
+        }
+
+        $order->status = 'canceled';
+        $order->save();
+
+        return redirect()->back()->with('success', 'Đơn hàng đã được huỷ.');
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\OrderDetail;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\OrderDetail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OrderDetailController extends Controller
 {
@@ -16,6 +17,12 @@ class OrderDetailController extends Controller
         return view('order_details.index', compact('orderDetails'));
     }
 
+    protected function checkAdmin()
+    {
+        if (Gate::denies('admin')) {
+            redirect()->route('access.denied')->send();
+        }
+    }
     // Form tạo chi tiết đơn hàng
     public function create()
     {
@@ -36,15 +43,15 @@ class OrderDetailController extends Controller
             'notes' => 'nullable|string|max:500',
         ]);
         OrderDetail::create($request->all());
-       
         return redirect()->route('order_details.index')->with('success', 'Chi tiết đơn hàng đã được tạo.');
     }
 
     // Chỉnh sửa chi tiết đơn hàng
     public function edit($id)
     {
+        $this->checkAdmin();
         $orderDetail = OrderDetail::find($id);
-
+        
         if (!$orderDetail) {
             return redirect()->route('order_details.index')->with('error', 'Không tìm thấy chi tiết đơn hàng.');
         }
@@ -58,6 +65,7 @@ class OrderDetailController extends Controller
     // Cập nhật chi tiết đơn hàng
     public function update(Request $request, $id)
     {
+        $this->checkAdmin();
         $orderDetail = OrderDetail::find($id);
 
         if (!$orderDetail) {
@@ -72,6 +80,7 @@ class OrderDetailController extends Controller
             'quantity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'notes' => 'nullable|string|max:500',
+            'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
         $orderDetail->update($request->all());
@@ -82,6 +91,7 @@ class OrderDetailController extends Controller
     // Xóa chi tiết đơn hàng
     public function destroy($id)
     {
+        $this->checkAdmin();
         $orderDetail = OrderDetail::find($id);
 
         if (!$orderDetail) {
