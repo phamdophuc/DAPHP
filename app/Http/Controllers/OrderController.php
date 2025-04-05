@@ -126,7 +126,6 @@ class OrderController extends Controller
     }
     public function cancel(Order $order)
     {
-        $this->checkAdmin(); //nhớ xoá đòng này
         if (in_array($order->status, ['completed', 'canceled'])) {
             return redirect()->back()->with('error', 'Không thể huỷ đơn hàng này.');
         }
