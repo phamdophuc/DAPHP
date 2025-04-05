@@ -2,14 +2,6 @@
     @section('title', 'Đăng ký tài khoản - Hệ Thống')
 
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .auth-card {
             background-color: white;
             border-radius: 1rem;
