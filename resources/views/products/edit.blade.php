@@ -172,7 +172,7 @@ select.form-control, input.form-control {
             </div>
             <div class="form-group">
                 <label for="image_url">Product Image</label>
-                <input type="file" name="image_url" class="form-control">
+                <input type="text" name="image_url" class="form-control">
                 @if ($product->image_url)
                     <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
                 @endif

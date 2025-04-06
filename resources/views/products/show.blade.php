@@ -70,7 +70,13 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-fluid">
+                        <td class="text-center">
+                            @if(Str::startsWith($product->image_url, ['http://', 'https://']))
+                                <img src="{{ $product->image_url }}" alt="Ảnh sản phẩm" width="120">
+                            @else
+                                <img src="{{ asset('storage/' . $product->image_url) }}" alt="Ảnh sản phẩm" width="120">
+                            @endif
+                        </td>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Danh mục:</strong> {{ $product->category->name }}</p>

@@ -105,6 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.index');
 
     Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::put('/{id}', [OrderController::class, 'update'])->name('orders.update');

@@ -156,11 +156,11 @@ form {
                     <td>{{ $order->notes }}</td>
                     <td>{{ ucfirst($order->status) }}</td>
                     <td>
-                        @if (Gate::allows('admin'))
-                            @php
-                                $isDisabled = in_array($order->status, ['completed', 'canceled']);
-                            @endphp
+                        @php
+                            $isDisabled = in_array($order->status, ['completed', 'canceled']);
+                        @endphp
 
+                        @if (Gate::allows('admin'))
                             <a href="{{ $isDisabled ? '#' : route('orders.edit', $order->id) }}"
                                 class="btn btn-warning btn-sm {{ $isDisabled ? 'disabled-link' : '' }}"
                                 {{ $isDisabled ? 'onclick=event.preventDefault()' : '' }}>
@@ -170,24 +170,23 @@ form {
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display: inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" {{ $isDisabled ? 'disabled' : '' }}>
+                                <button type="submit" 
+                                    class="btn btn-danger btn-sm {{ $isDisabled ? 'disabled-link' : '' }}" 
+                                    {{ $isDisabled ? 'disabled' : '' }}>
                                     Delete
                                 </button>
                             </form>
 
                         @elseif (Auth::id() == $order->user_id)
-                            @php
-                                $isDisabled = in_array($order->status, ['completed', 'canceled']);
-                            @endphp
                             <form action="{{ route('orders.cancel', $order->id) }}" method="POST" style="display: inline-block;">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" 
-                                class="btn btn-danger btn-sm {{ $isDisabled ? 'disabled-link' : '' }}" 
-                                {{ $isDisabled ? 'disabled' : '' }}>
-                                Huỷ đơn
-                            </button>
-                        </form>
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" 
+                                    class="btn btn-danger btn-sm {{ $isDisabled ? 'disabled-link' : '' }}" 
+                                    {{ $isDisabled ? 'disabled' : '' }}>
+                                    Huỷ đơn
+                                </button>
+                            </form>
                         @endif
                     </td>
                 </tr>

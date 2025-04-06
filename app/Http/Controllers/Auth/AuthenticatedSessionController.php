@@ -32,8 +32,6 @@ class AuthenticatedSessionController extends Controller
         // Attempt to log the user in
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
-    
-            // Redirect to the products page instead of dashboard
             return redirect()->route('products.index');
         }
     

@@ -63,7 +63,7 @@ class ProductController extends Controller
             'seo_title' => 'nullable|string|max:255',
             'meta_keyword' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
+            'image_url' => 'nullable|url|max:2048'
         ]);
 
         if (!Storage::exists('public/products')) {
@@ -145,7 +145,7 @@ class ProductController extends Controller
             'seo_title' => 'nullable|string|max:255',
             'meta_keyword' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
+            'image_url' => 'nullable|url|max:2048'
         ]);
 
         if (!Storage::exists('public/products')) {
