@@ -6,125 +6,205 @@
 
 <style>
     /* Định dạng chung */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-}
+    body {
+        font-family: 'Helvetica Neue', sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+        color: #2d3748;
+    }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
+    .container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 25px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
 
-h1 {
-    text-align: center;
-    color: #007bff;
-    margin-bottom: 20px;
-}
 
-/* Form Lọc Sản Phẩm */
-.filter-form {
-    display: flex;
-    gap: 10px;
-    padding: 15px;
-    background: #f1f1f1;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    justify-content: space-between;
-}
+    h1 {
+        text-align: center;
+        color: #333;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b46c1;
+    }
 
-.filter-form input,
-.filter-form select,
-.filter-form button {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+    /* Form Lọc Sản Phẩm */
+    .filter-form {
+        display: flex;
+        gap: 12px;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+    }
 
-.filter-form button {
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-    border: none;
-}
+    .filter-form input,
+    .filter-form select,
+    .filter-form button {
+        padding: 12px 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
 
-.filter-form button:hover {
-    background: #0056b3;
-}
+    .filter-form input:focus,
+    .filter-form select:focus {
+        border-color: #6b46c1;
+        box-shadow: 0 0 8px rgba(107, 70, 193, 0.5);
+    }
 
-/* Bảng danh sách sản phẩm */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+    .filter-form button {
+        background-color: #6b46c1;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
-.table th, .table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
+    .filter-form button:hover {
+        background-color: #4c2889;
+        transform: scale(1.05);
+    }
 
-.table th {
-    background: #007bff;
-    color: white;
-}
+    /* Bảng danh sách sản phẩm */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+    }
 
-.table tr:nth-child(even) {
-    background: #f9f9f9;
-}
+    .table th, .table td {
+        border: 1px solid #f1f1f1;
+        padding: 18px;
+        text-align: center;
+    }
 
-/* Ảnh sản phẩm */
-.product-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 5px;
-}
+    .table th {
+        background-color: #6b46c1;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
-/* Nút hành động */
-.action-buttons a,
-.action-buttons button {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 2px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    color: white;
-}
+    .table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-.action-buttons .btn-info {
-    background: #17a2b8;
-}
+    /* Bỏ hiệu ứng hover */
+    .table tr:hover {
+        background-color: inherit; /* Không thay đổi màu nền khi hover */
+        transform: none; /* Không có hiệu ứng nổi khi hover */
+    }
 
-.action-buttons .btn-warning {
-    background: #ffc107;
-}
+    /* Ảnh sản phẩm */
+    .product-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
 
-.action-buttons .btn-danger {
-    background: #dc3545;
-}
 
-.action-buttons .btn-success {
-    background: #28a745;
-}
+    .product-image:hover {
+        transform: scale(1.1);
+    }
 
-.action-buttons button:hover {
-    opacity: 0.8;
-}
+    /* Nút hành động */
+    .action-buttons a,
+    .action-buttons button {
+        display: inline-block;
+        padding: 10px 15px;
+        margin: 6px;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .action-buttons .btn-info {
+        background-color: #3498db;
+    }
+
+    .action-buttons .btn-info:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+    }
+
+    .action-buttons .btn-warning {
+        background-color: #f39c12;
+    }
+
+    .action-buttons .btn-warning:hover {
+        background-color: #e67e22;
+        transform: scale(1.05);
+    }
+
+    .action-buttons .btn-danger {
+        background-color: #e74c3c;
+    }
+
+    .action-buttons .btn-danger:hover {
+        background-color: #c0392b;
+        transform: scale(1.05);
+    }
+
+    .action-buttons .btn-success {
+        background-color: #2ecc71;
+    }
+
+    .action-buttons .btn-success:hover {
+        background-color: #27ae60;
+        transform: scale(1.05);
+    }
+
+    /* Cột hành động */
+    .action-buttons form {
+        display: inline;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+        .filter-form {
+            flex-direction: column;
+        }
+
+        .filter-form input,
+        .filter-form select,
+        .filter-form button {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+    }
+
+    /* Hiệu ứng fade-in */
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+
 </style>
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-4 fade-in">
         <h1 class="mb-4 text-center text-primary">Danh Sách Sản Phẩm</h1>
         <form action="{{ route('products.index') }}" method="GET" class="filter-form mb-4 bg-light p-3 rounded shadow-sm">
             <div class="col-md-3">
@@ -134,9 +214,7 @@ h1 {
                 <select name="category_id" class="form-select">
                     <option value="">-- Chọn danh mục --</option>
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -144,9 +222,7 @@ h1 {
                 <select name="brand_id" class="form-select">
                     <option value="">-- Chọn thương hiệu --</option>
                     @foreach ($brands as $brand)
-                        <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
-                            {{ $brand->name }}
-                        </option>
+                        <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -184,11 +260,11 @@ h1 {
                             <td class="text-center">{{ $product->id }}</td>
                         @endif
                             <td class="text-center">
-                            @if(Str::startsWith($product->image_url, ['http://', 'https://']))
-                                <img src="{{ $product->image_url }}" alt="Ảnh sản phẩm" width="120">
-                            @else
-                                <img src="{{ asset('storage/' . $product->image_url) }}" alt="Ảnh sản phẩm" width="120">
-                            @endif
+                                @if(Str::startsWith($product->image_url, ['http://', 'https://']))
+                                    <img src="{{ $product->image_url }}" alt="Ảnh sản phẩm" class="product-image">
+                                @else
+                                    <img src="{{ asset('storage/' . $product->image_url) }}" alt="Ảnh sản phẩm" class="product-image">
+                                @endif
                             </td>
                             <td>{{ $product->name }}</td>
                             <td class="text-center">{{ $product->category->name ?? 'N/A' }}</td>
@@ -201,15 +277,15 @@ h1 {
                                     {{ number_format($product->price) }} VNĐ
                                 @endif
                             </td>
-                            <td class="text-center">
+                            <td class="text-center action-buttons">
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm">🔍</a>
                                 @if (Gate::allows('admin'))
                                     <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">✏️</a>
-                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?');">🗑️</button>
-                                        </form>
+                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?');">🗑️</button>
+                                    </form>
                                 @endif
                                 <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-inline">
                                     @csrf

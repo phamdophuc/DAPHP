@@ -1,63 +1,69 @@
 @extends('layouts.app')
-<style>/* order-form.css */
 
-.container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+<style>
+    /* order-form.css */
 
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: #333;
-}
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-.form-group {
-    margin-bottom: 20px;
-}
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #6b46c1;
+        font-weight: 700;
+    }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
-    color: #444;
-}
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-.form-control {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-}
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+        color: #444;
+    }
 
-.form-control:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 4px rgba(40, 167, 69, 0.5);
-}
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: #fdfdfd;
+        transition: all 0.3s ease;
+    }
 
-.btn-success {
-    width: 100%;
-    padding: 12px;
-    font-size: 18px;
-    background-color: #28a745;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
+    .form-control:focus {
+        border-color: #6b46c1;
+        box-shadow: 0 0 4px rgba(107, 70, 193, 0.4);
+        outline: none;
+    }
 
-.btn-success:hover {
-    background-color: #218838;
-}
+    .btn-success {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        background-color: #6b46c1;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
 
+    .btn-success:hover {
+        background-color: #553c9a;
+    }
 </style>
+
 @section('content')
 <div class="container">
     <h1>Create New Order</h1>
@@ -86,9 +92,9 @@ label {
         <div class="form-group">
             <label for="status">Status</label>
             <select name="status" id="status" class="form-control">
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
-                <option value="canceled">Canceled</option>
+                <option value="pending">🕒 Pending</option>
+                <option value="completed">✅ Completed</option>
+                <option value="canceled">❌ Canceled</option>
             </select>
         </div>
         <button type="submit" class="btn btn-success">Save</button>

@@ -1,88 +1,135 @@
 @extends('layouts.app')
 
 <style>
+    body {
+        background-color: #f4f4f9;
+    }
+
     .user-title {
         text-align: center;
-        margin-top: 30px;
-        margin-bottom: 20px;
-        font-size: 28px;
+        margin-top: 40px;
+        font-size: 32px;
         font-weight: bold;
-        color: #007bff;
+        color: #6b46c1;
+    }
+    .container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 5px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    .user-filter-form {
+        margin: 30px auto;
+        padding: 24px;
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(107, 70, 193, 0.15);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+        max-width: 1000px;
+    }
+
+    .user-filter-form .form-control {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        width: 200px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+    }
+
+    .user-filter-form .form-control:focus {
+        border-color: #6b46c1;
+        outline: none;
+        box-shadow: 0 0 5px rgba(107, 70, 193, 0.3);
+    }
+
+    .btn-filter,
+    .btn-reset {
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-filter {
+        background: linear-gradient(to right, #6b46c1, #9f7aea);
+        color: white;
+        box-shadow: 0 4px 12px rgba(107, 70, 193, 0.25);
+    }
+
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(107, 70, 193, 0.35);
+    }
+
+    .btn-reset {
+        background-color: #e2e8f0;
+        color: #4a5568;
+    }
+
+    .btn-reset:hover {
+        background-color: #cbd5e0;
     }
 
     .table-container {
-        padding: 20px;
         background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+        margin: 30px auto;
+        padding: 24px;
+        max-width: 1500px;
     }
 
     .user-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
     }
 
-    .user-table th, .user-table td {
-        border: 1px solid #dee2e6;
-        padding: 12px 15px;
+    .user-table th,
+    .user-table td {
+        padding: 14px 16px;
         text-align: center;
-        font-size: 14px;
+        font-size: 15px;
+        border-bottom: 1px solid #e2e8f0;
     }
 
     .user-table th {
-        background-color: #f1f1f1;
-        color: #333;
+        background-color: #f4f4f9;
+        color: #4a4a4a;
+        font-weight: 600;
     }
 
     .user-table tbody tr:hover {
-        background-color: #f9f9f9;
+        background-color: #f9f7fd;
     }
 
-    .user-filter-form {
-        margin: 30px 0;
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
+    @media (max-width: 768px) {
+        .user-filter-form {
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .user-filter-form .form-control {
-        padding: 8px 12px;
-        border-radius: 5px;
-        border: 1px solid #ced4da;
-        width: 200px;
-        font-size: 14px;
-    }
+        .user-filter-form .form-control {
+            width: 100%;
+            max-width: 90%;
+        }
 
-    .user-filter-form .btn-filter, .user-filter-form .btn-reset {
-        padding: 8px 20px;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-        border: none;
-    }
-
-    .btn-filter {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .btn-filter:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-reset {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .btn-reset:hover {
-        background-color: #5a6268;
+        .btn-filter,
+        .btn-reset {
+            width: 150px;
+            text-align: center;
+        }
     }
 </style>
 

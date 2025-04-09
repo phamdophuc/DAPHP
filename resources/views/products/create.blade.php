@@ -1,114 +1,149 @@
 @extends('layouts.app')
+
 @php
     use Illuminate\Support\Str;
 @endphp
 
-
+@push('styles')
 <style>
-    /* Basic Container Styles */
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+        /* Container Style */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
 
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: #333;
-}
+        .container:hover {
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+        }
 
-/* Error Message Styling */
-.alert {
-    margin-top: 20px;
-    font-size: 16px;
-    padding: 15px;
-    background-color: #f8d7da;
-    border-radius: 5px;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #6b46c1;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-.alert ul {
-    padding-left: 20px;
-    list-style-type: none;
-}
+        /* Alert Styling */
+        .alert {
+            margin-top: 20px;
+            font-size: 14px;
+            padding: 16px;
+            background-color: #fbdada;
+            border-radius: 8px;
+            color: #9b2c2c;
+            border: 1px solid #f6d1d1;
+        }
 
-/* Form Styling */
-.form-group {
-    margin-bottom: 20px;
-}
+        .alert ul {
+            padding-left: 20px;
+            list-style-type: none;
+        }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
-    color: #444;
-}
+        /* Input & Select Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-.form-control {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    background-color: #fdfdfd;
-}
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
 
-.form-control:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 4px rgba(40, 167, 69, 0.5);
-}
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            background-color: #f7fafc;
+            transition: border-color 0.3s ease;
+        }
 
-/* Button Styles */
-.btn-success {
-    width: 100%;
-    padding: 12px;
-    font-size: 18px;
-    background-color: #28a745;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
+        .form-control:focus {
+            border-color: #6b46c1;         
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+        }
 
-.btn-success:hover {
-    background-color: #218838;
-}
+        /* Button Styling */
+        .btn-success {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            background-color: #6b46c1;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-/* File Input Styles */
-.form-control[type="file"] {
-    padding: 8px;
-    font-size: 14px;
-}
+        .btn-success:hover {
+            background-color: #6b46c1;
+        }
 
-/* Textarea Styles */
-textarea.form-control {
-    min-height: 120px;
-}
+        /* File Input Styling */
+        .form-control[type="file"] {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #fff;
+        }
 
-/* Select and Input Field Styling */
-select.form-control, input.form-control {
-    margin-bottom: 10px;
-}
+        /* Textarea Styling */
+        textarea.form-control {
+            min-height: 150px;
+        }
 
-/* Add some space between the form elements */
-.form-group:last-child {
-    margin-bottom: 0;
-}
-</style>
+        /* Select and Input Field Styling */
+        select.form-control,
+        input.form-control {
+            margin-bottom: 12px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Image Preview */
+        .img-thumbnail {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid #ddd;
+        }
+
+        /* Input Styling for Number and Price */
+        .form-control[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .form-control[type="number"]::-webkit-outer-spin-button,
+        .form-control[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+    </style>
+@endpush
+
 @section('content')
     <div class="container">
-        <h1>Add Product</h1>
+        <h1>Thêm Sản Phẩm</h1>
         
         {{-- Hiển thị lỗi nếu có --}}
         @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -121,30 +156,30 @@ select.form-control, input.form-control {
             @csrf
 
             <div class="form-group">
-                <label for="name">Name</label>
+                <label for="name">Tên Sản Phẩm</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
             </div>
 
             <div class="form-group">
-                <label for="price">Price</label>
+                <label for="price">Giá (VNĐ)</label>
                 <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price') }}" required>
             </div>
 
             <div class="form-group">
-                <label for="discount">Discount (%)</label>
+                <label for="discount">Giảm Giá (%)</label>
                 <input type="number" step="0.01" name="discount" class="form-control" value="{{ old('discount') }}">
                 <small class="form-text text-muted">Nếu có giảm giá, nhập tỷ lệ phần trăm.</small>
             </div>
 
             <div class="form-group">
-                <label for="quantity">Quantity</label>
+                <label for="quantity">Số Lượng</label>
                 <input type="number" name="quantity" class="form-control" value="{{ old('quantity') }}" required>
             </div>
 
             <div class="form-group">
-                <label for="category_id">Category</label>
+                <label for="category_id">Danh Mục</label>
                 <select name="category_id" class="form-control" required>
-                    <option value="">-- Select Category --</option>
+                    <option value="">-- Chọn Danh Mục --</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                             {{ $category->name }}
@@ -154,9 +189,9 @@ select.form-control, input.form-control {
             </div>
 
             <div class="form-group">
-                <label for="brand_id">Brand</label>
+                <label for="brand_id">Thương Hiệu</label>
                 <select name="brand_id" class="form-control">
-                    <option value="">-- Select Brand --</option>
+                    <option value="">-- Chọn Thương Hiệu --</option>
                     @foreach($brands as $brand)
                         <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
                             {{ $brand->name }}
@@ -166,46 +201,45 @@ select.form-control, input.form-control {
             </div>
 
             <div class="form-group">
-                <label for="status">Status</label>
+                <label for="status">Trạng Thái</label>
                 <select name="status" class="form-control" required>
-                    <option value="1" {{ old('status', 1) == 1 ? 'selected' : '' }}>Active</option>
-                    <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                    <option value="1" {{ old('status', 1) == 1 ? 'selected' : '' }}>Kích Hoạt</option>
+                    <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Không Kích Hoạt</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="is_hot">Hot Product</label>
+                <label for="is_hot">Sản Phẩm Hot</label>
                 <select name="is_hot" class="form-control">
-                    <option value="0" {{ old('is_hot') == 0 ? 'selected' : '' }}>No</option>
-                    <option value="1" {{ old('is_hot') == 1 ? 'selected' : '' }}>Yes</option>
+                    <option value="0" {{ old('is_hot') == 0 ? 'selected' : '' }}>Không</option>
+                    <option value="1" {{ old('is_hot') == 1 ? 'selected' : '' }}>Có</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="hot_start_date">Hot Start Date</label>
+                <label for="hot_start_date">Ngày Bắt Đầu Hot</label>
                 <input type="datetime-local" name="hot_start_date" class="form-control" value="{{ old('hot_start_date') }}">
             </div>
 
             <div class="form-group">
-                <label for="hot_end_date">Hot End Date</label>
+                <label for="hot_end_date">Ngày Kết Thúc Hot</label>
                 <input type="datetime-local" name="hot_end_date" class="form-control" value="{{ old('hot_end_date') }}">
             </div>
 
-
             <div class="form-group">
-                <label for="image_url">Product Image</label>
+                <label for="image_url">Ảnh Sản Phẩm</label>
                 <input type="text" name="image_url" class="form-control" placeholder="Nhập URL hình ảnh" value="{{ old('image_url', isset($product) ? $product->image_url : '') }}" required>
                 @if (isset($product) && $product->image_url)
-                    <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 80px; height: 80px;">
+                    <img src="{{ Str::startsWith($product->image_url, 'http') ? $product->image_url : asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}" class="img-thumbnail">
                 @endif
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">Mô Tả</label>
                 <textarea name="description" class="form-control">{{ old('description') }}</textarea>
             </div>
 
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="submit" class="btn btn-success">Lưu</button>
         </form>
     </div>
 @endsection

@@ -1,77 +1,82 @@
 @extends('layouts.app')
+
 <style>
     /* order-form.css */
 
-.container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: #333;
-}
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #6b46c1;
+        font-weight: 700;
+    }
 
-.form-group {
-    margin-bottom: 20px;
-}
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
-    color: #444;
-}
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+        color: #444;
+    }
 
-.form-control {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    background-color: #fdfdfd;
-}
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: #fdfdfd;
+        transition: all 0.3s ease;
+    }
 
-.form-control[disabled] {
-    background-color: #f5f5f5;
-    color: #666;
-}
+    .form-control[disabled] {
+        background-color: #f5f5f5;
+        color: #666;
+    }
 
-.form-control:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 4px rgba(40, 167, 69, 0.5);
-}
+    .form-control:focus {
+        border-color: #6b46c1;
+        box-shadow: 0 0 4px rgba(107, 70, 193, 0.4);
+        outline: none;
+    }
 
-.btn-success {
-    width: 100%;
-    padding: 12px;
-    font-size: 18px;
-    background-color: #28a745;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
+    .btn-success {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        background-color: #6b46c1;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
 
-.btn-success:hover {
-    background-color: #218838;
-}
-
+    .btn-success:hover {
+        background-color: #553c9a;
+    }
 </style>
+
 @section('content')
 <div class="container">
     <h1>Edit Order</h1>
-    
+
     <form action="{{ route('orders.update', $order->id) }}" method="POST">
         @csrf
         @method('PUT')
+
         <div class="form-group">
             <label for="id">Order ID</label>
             <input type="text" id="id" class="form-control" value="{{ $order->id }}" disabled>
@@ -87,6 +92,7 @@ label {
             <label for="user_email">User Email</label>
             <input type="text" id="user_email" class="form-control" value="{{ $order->user->email }}" disabled>
         </div>
+
         <div class="form-group">
             <label for="order_date">Order Date</label>
             <input type="datetime-local" id="order_date" class="form-control" value="{{ date('Y-m-d\TH:i', strtotime($order->order_date)) }}" disabled>
@@ -104,17 +110,19 @@ label {
             <input type="text" id="ship_address" class="form-control" value="{{ $order->ship_address }}" disabled>
             <input type="hidden" name="ship_address" value="{{ $order->ship_address }}">
         </div>
+
         <div class="form-group">
             <label for="notes">Notes</label>
             <input type="text" name="notes" id="notes" value="{{ $order->notes }}" class="form-control" disabled>
-            <input type="hidden" name="notes" value="{{ $order->notes }}"> 
+            <input type="hidden" name="notes" value="{{ $order->notes }}">
         </div>
+
         <div class="form-group">
             <label for="status">Status</label>
             <select name="status" id="status" class="form-control">
-                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                <option value="canceled" {{ $order->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>🕒 Pending</option>
+                <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>✅ Completed</option>
+                <option value="canceled" {{ $order->status == 'canceled' ? 'selected' : '' }}>❌ Canceled</option>
             </select>
         </div>
 

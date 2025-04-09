@@ -1,110 +1,98 @@
 @extends('layouts.app')
-<style>
-    /* Basic Container Styling */
-.container {
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    text-align: center;
-    font-size: 32px;
-    color: #333;
-    margin-bottom: 30px;
-}
-
-/* Table Styling */
-.table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-}
-
-.table th, .table td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #ddd;
-    font-size: 16px;
-}
-
-.table th {
-    background-color: #f8f9fa;
-    color: #495057;
-}
-
-.table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.table tr:hover {
-    background-color: #e9ecef;
-}
-
-/* Button Styling */
-.btn-primary, .btn-danger {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-/* Success Message Styling */
-.alert-success {
-    padding: 15px;
-    background-color: #28a745;
-    color: white;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-/* Empty Cart Message */
-p {
-    font-size: 18px;
-    color: #666;
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Link Styling */
-a {
-    font-size: 16px;
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-</style>
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+    .container {
+        max-width: 1100px;
+        margin: 60px auto;
+        padding: 40px;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 30px;
+        color: #6b46c1;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .table th, .table td {
+        padding: 16px;
+        border: 1px solid #eee;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table th {
+        background: #f2f2f2;
+        color: #444;
+    }
+
+    .btn {
+        padding: 10px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #6b46c1;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #5532a2;
+    }
+
+    .btn-danger {
+        background-color: #e3342f;
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        text-align: center;
+        font-size: 18px;
+        color: #777;
+    }
+    .table td:first-child {
+    text-align: left;
+}
+
+</style>
+
+
 <div class="container">
     <h2>Giỏ hàng</h2>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert-success">{{ session('success') }}</div>
     @endif
 
     @if($cartItems->isEmpty())
@@ -128,8 +116,7 @@ a:hover {
                             @if($item->product->promotion_price)
                                 <span style="color: red; text-decoration: line-through;">
                                     {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }} VND
-                                </span>
-                                <br>
+                                </span><br>
                                 <span>
                                     {{ number_format($item->product->promotion_price * $item->quantity, 0, ',', '.') }} VND
                                 </span>
@@ -141,16 +128,17 @@ a:hover {
                             <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i> Xóa</button>
                             </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
-        <a href="{{ route('checkout.index') }}" class="btn btn-primary">Tiến hành thanh toán</a>
+        <div class="mt-4" style="display: flex; justify-content: space-between;">
+            <a href="{{ route('checkout.index') }}" class="btn btn-primary"><i class="fas fa-credit-card"></i> Thanh toán</a>
+            <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="fas fa-store"></i> Tiếp tục mua</a>
+        </div>
     @endif
-    <a href="{{ route('products.index') }}" class="btn btn-primary">Tiếp tục mua sắm</a>
 </div>
 @endsection

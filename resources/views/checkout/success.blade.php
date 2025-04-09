@@ -1,60 +1,70 @@
 @extends('layouts.app')
+
 <style>
-    /* Basic Container Styling */
 .container {
     max-width: 800px;
     margin: 100px auto;
     padding: 50px;
     background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(107, 70, 193, 0.1);
     text-align: center;
 }
 
-h2 {
-    font-size: 36px;
-    color: #28a745;
-    margin-bottom: 20px;
+/* Success line (icon + heading) */
+.success-message {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    color: #6b46c1;
+    font-weight: 600;
+    margin-bottom: 16px;
 }
 
+.success-message i {
+    font-size: 28px;
+    color: #38a169;
+}
+
+/* Text below */
 p {
-    font-size: 18px;
-    color: #555;
+    font-size: 16px;
+    color: #4a5568;
     margin-bottom: 30px;
 }
 
-/* Button Styling */
+/* Button */
 .btn-primary {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #6b46c1, #9f7aea);
     color: white;
     font-size: 16px;
-    padding: 12px 25px;
-    border-radius: 6px;
+    padding: 12px 26px;
+    border-radius: 999px;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 14px rgba(107, 70, 193, 0.3);
+    display: inline-block;
+    margin-top: 10px;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #553c9a, #805ad5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 70, 193, 0.4);
 }
 
-.btn-primary:active {
-    background-color: #003366;
-}
-
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .container {
         padding: 30px;
-        margin: 20px;
+        margin: 40px 20px;
     }
 
-    h2 {
-        font-size: 28px;
-    }
-
-    p {
-        font-size: 16px;
+    .success-message {
+        font-size: 20px;
+        flex-direction: row;
+        justify-content: center;
+        gap: 6px;
     }
 
     .btn-primary {
@@ -63,10 +73,14 @@ p {
     }
 }
 </style>
+
 @section('content')
-<div class="container text-center">
-    <h2>Đặt hàng thành công!</h2>
+<div class="container">
+    <div class="success-message">
+        <i class="fas fa-check-circle"></i>
+        <span>Đặt hàng thành công!</span>
+    </div>
     <p>Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi.</p>
-    <a href="{{ route('products.index') }}" class="btn btn-primary">OK</a>
+    <a href="{{ route('products.index') }}" class="btn btn-primary">Tiếp tục mua sắm</a>
 </div>
 @endsection
