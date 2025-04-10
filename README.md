@@ -1,6 +1,6 @@
-npm i /n
-npm run build /n
-composer install /n
-php artisan key:generate /n
-php artisan db:seed /n
-php artisan serve /n
+npm i <br>
+npm run build <br>
+composer install <br>
+php artisan key:generate <br>
+php artisan db:seed <br>
+php artisan serve <br>
